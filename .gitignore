@@ -1,0 +1,4 @@
+node_modules/
+secrets/
+bin/sql/
+bin/configure_db.sh
