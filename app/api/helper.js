@@ -2,21 +2,20 @@ const Session = require('../account/session');
 const AccountTable = require('../account/table');
 const { hash } = require('../account/helper');
 
-const setSession = ({ username, res, sessionId }) => {
+const setSession = ({ databasename, username, res, sessionId }) => {
     return new Promise((resolve, reject) => {
         let session, sessionString;
-
         if (sessionId) {
-            sessionString = Session.sessionString({ username, id: sessionId })
-
+            sessionString = Session.sessionString({ databasename, username, id: sessionId })
             setSessionCookie({ sessionString, res });
 
             resolve({ message: 'session restored' });
         } else {
-            session = new Session({ username });
+            session = new Session({ databasename, username });
             sessionString = session.toString();
 
             AccountTable.updateSessionId({
+                databasename,
                 sessionId: session.id,
                 usernameHash: hash(username)
             })
@@ -47,9 +46,9 @@ const authenticatedAccount = ({ sessionString }) => {
 
             return reject(error);
         } else {
-            const { username, id } = Session.parse(sessionString);
+            const { username, id, database } = Session.parse(sessionString);
 
-            AccountTable.getAccount({ usernameHash: hash(username) })
+            AccountTable.getAccount({ databasename: database, usernameHash: hash(username) })
                 .then(({ account }) => {
                     const authenticated = account.sessionId === id;
 

@@ -1,9 +1,10 @@
-const pool = require('../../databasePool');
+const { connectTo } = require('../account/helper');
 
 class AccountTable {
-    static storeAccount({ usernameHash, passwordHash }) {
+    static storeAccount({ databasename, usernameHash, passwordHash }) {
+        const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
-            pool.query(
+            schoolPool.query(
                 'INSERT INTO account("usernameHash", "passwordHash") VALUES($1,$2)',
                 [usernameHash, passwordHash],
                 (error, response) => {
@@ -15,9 +16,10 @@ class AccountTable {
         });
     }
 
-    static getAccount({ usernameHash }) {
+    static getAccount({ databasename, usernameHash }) {
+        const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
-            pool.query(
+            schoolPool.query(
                 `SELECT id, "passwordHash", "sessionId" FROM account 
                 WHERE "usernameHash" = $1`,
                 [usernameHash],
@@ -30,9 +32,10 @@ class AccountTable {
         });
     }
 
-    static updateSessionId({ sessionId, usernameHash }) {
+    static updateSessionId({ databasename, sessionId, usernameHash }) {
+        const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
-            pool.query(
+            schoolPool.query(
                 'UPDATE account SET "sessionId" = $1 WHERE "usernameHash" = $2',
                 [sessionId, usernameHash],
                 (error, response) => {

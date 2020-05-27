@@ -4,15 +4,16 @@ const { hash } = require('./helper');
 const SEPARATOR = '|';
 
 class Session {
-    constructor({ username }) {
+    constructor({ databasename, username }) {
         this.username = username;
         this.id = uuid();
+        this.database = databasename;
     }
 
     toString() {
-        const { username, id } = this;
+        const { username, id, database } = this;
 
-        return Session.sessionString({ username, id });
+        return Session.sessionString({ databasename: database, username, id });
     }
 
     static parse(sessionString) {
@@ -21,7 +22,8 @@ class Session {
         return {
             username: sessionData[0],
             id: sessionData[1],
-            sessionHash: sessionData[2]
+            sessionHash: sessionData[2],
+            database: sessionData[3]
         };
     }
 
@@ -37,10 +39,11 @@ class Session {
         return `${username}${SEPARATOR}${id}`;
     }
 
-    static sessionString({ username, id }) {
+    static sessionString({ databasename, username, id }) {
         const accountData = Session.accountData({ username, id });
+        const database = databasename;
 
-        return `${accountData}${SEPARATOR}${hash(accountData)}`;
+        return `${accountData}${SEPARATOR}${hash(accountData)}${SEPARATOR}${database}`;
     }
 }
 
