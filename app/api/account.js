@@ -43,7 +43,6 @@ router.post('/signup', (req, res, next) => {
         .then((databasename) => {
             AccountTable.getAccount({ databasename, usernameHash })
                 .then(({ account }) => {
-                    console.log({ account });
                     if (!account) {
                         return AccountTable.storeAccount({ databasename, usernameHash, passwordHash })
                     } else {
