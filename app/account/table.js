@@ -1,4 +1,4 @@
-const { connectTo } = require('../account/helper');
+const { connectTo } = require('../../secrets/databaseConfiguration');
 
 class AccountTable {
     static storeAccount({ databasename, usernameHash, passwordHash }) {
