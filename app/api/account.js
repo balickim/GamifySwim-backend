@@ -181,7 +181,7 @@ router.get('/authenticated', (req, res, next) => {
 router.get('/info', (req, res, next) => {
     authenticatedAccount({ sessionString: req.cookies.sessionString })
         .then(({ account, username }) => {
-            res.json({ info: { balance: account.balance, username } });
+            res.json({ info: { balance: account.id, username } });
         })
         .catch(error => next(error))
 });
