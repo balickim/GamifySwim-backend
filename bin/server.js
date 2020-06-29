@@ -2,7 +2,8 @@ var os = require('os');
 const app = require('../app');
 
 const networkInterfaces = os.networkInterfaces();
-let serverIP = networkInterfaces['enp4s0'][0]['address'];
+
+let serverIP = (networkInterfaces['enp4s0'] === undefined ? 'unknown' : networkInterfaces['enp4s0'][0]['address']);
 
 const PORT = process.env.PORT || 3000;
 
