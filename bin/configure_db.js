@@ -1,5 +1,5 @@
 const cPool = require('../databasePool');
-const { connectTo } = require('../app/account/helper');
+const { connectTo } = require('../secrets/databaseConfiguration');
 const cryptoRandomString = require('crypto-random-string');
 
 class ConfigureDB {
@@ -35,7 +35,7 @@ class ConfigureDB {
             } catch (e) {
                 throw e
             } finally {
-                console.info(`DATABASE :${randomDatabaseName} - created`);
+                console.info(`DATABASE ${randomDatabaseName} - created`);
                 catalogPool.release()
             }
             const pool = await connectTo(randomDatabaseName);
@@ -87,7 +87,29 @@ class ConfigureDB {
                     "title" text,
                     "description" varchar(255),
                         PRIMARY KEY (levelid)
-                    );`);
+                    );
+                    INSERT INTO public.level(
+                        levelid, title, description)
+                        VALUES (1, 'niemowle', '');
+                    INSERT INTO public.level(
+                        levelid, title, description)
+                        VALUES (2, 'średnio-początkujący', '');
+                    INSERT INTO public.level(
+                        levelid, title, description)
+                        VALUES (3, 'początkujący', '');
+                    INSERT INTO public.level(
+                        levelid, title, description)
+                        VALUES (4, 'średnio-zaawansowany', '');
+                    INSERT INTO public.level(
+                        levelid, title, description)
+                        VALUES (5, 'zaawansowany', '');
+                    INSERT INTO public.level(
+                        levelid, title, description)
+                        VALUES (6, 'mistrz', '');
+                    INSERT INTO public.level(
+                        levelid, title, description)
+                        VALUES (7, 'wielki mistrz', '');
+                    `);
                 await schoolPool.query(`CREATE TABLE "payment" (
                     "paymentid" SERIAL,
                     "contestantid" int,
@@ -99,7 +121,14 @@ class ConfigureDB {
                     "genderid" SERIAL,
                     "gender_name" text,
                         PRIMARY KEY (genderid)
-                    );`);
+                    );
+                    INSERT INTO gender(
+	                genderid, gender_name)
+	                VALUES (1, 'mężczyzna');
+                    INSERT INTO gender(
+	                genderid, gender_name)
+	                VALUES (2, 'kobieta');
+                    `);
                 await schoolPool.query(`CREATE TABLE "training" (
                     "id_c" int,
                     "id_t" int,
@@ -128,7 +157,7 @@ class ConfigureDB {
                 await schoolPool.query('ROLLBACK')
                 throw e
             } finally {
-                console.info(`DATABASE :${randomDatabaseName} - added structure`);
+                console.info(`DATABASE ${randomDatabaseName} - added structure`);
                 schoolPool.release()
             }
         })().catch(e => console.error(e.stack))
