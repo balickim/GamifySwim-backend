@@ -15,6 +15,20 @@ class ContestantTable {
             );
         });
     }
+    static contestant({ databasename, id }) {
+        const schoolPool = connectTo(databasename);
+        return new Promise((resolve, reject) => {
+            schoolPool.query(
+                'SELECT * FROM contestant WHERE contestantid = $1',
+                [id],
+                (error, response) => {
+                    if (error) return reject(error);
+
+                    resolve(response.rows[0]);
+                }
+            );
+        });
+    }
 }
 
 module.exports = ContestantTable;
