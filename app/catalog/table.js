@@ -7,9 +7,11 @@ class CatalogTable {
                 'SELECT "databaseName" FROM school WHERE "shortName" = $1',
                 [shortname],
                 (error, response) => {
-                    if (error) return reject(error);
-
-                    resolve(response.rows[0].databaseName);
+                    if (error || response.rows[0] === undefined) {
+                            return reject(error)
+                        } else {
+                            resolve(response.rows[0].databaseName);
+                        }
                 }
             );
         });

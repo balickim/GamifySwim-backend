@@ -61,6 +61,7 @@ router.post('/signup', (req, res, next) => {
                 .then(({ message }) => { res.json({ message }) })
                 .catch(error => next(error));
         })
+        .catch(error => next(error));
 });
 
 /**
@@ -102,7 +103,7 @@ router.post('/login', (req, res, next) => {
 
                         return setSession({ databasename, username, res, sessionId });
                     } else {
-                        const error = new Error('Incorrect username or password');
+                        const error = new Error('Nieprawidłowy login lub hasło');
 
                         error.statusCode = 409;
 
@@ -112,6 +113,7 @@ router.post('/login', (req, res, next) => {
                 .then(({ message }) => res.json({ message }))
                 .catch(error => next(error))
         })
+        .catch(error => next(error))
 });
 
 /**
