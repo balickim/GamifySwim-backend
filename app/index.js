@@ -10,7 +10,8 @@ const specs = require('./api/docs/specs');
 
 const app = express();
 
-app.use(cors({ origin: 'http://localhost:1234', credentials: true }));
+app.use(cors({ origin: '*', credentials: true }));
+// app.use(cors({ origin: 'http://localhost:1234', credentials: true }));
 // app.use(cors({ origin: 'http://192.168.1.28:1234', credentials: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
