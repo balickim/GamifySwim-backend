@@ -99,9 +99,9 @@ router.post('/login', (req, res, next) => {
             AccountTable.getAccount({ databasename, usernameHash: hash(username) })
                 .then(({ account }) => {
                     if (account && account.passwordHash === hash(password)) {
-                        const { sessionId } = account;
+                        const { sessionId, role_id } = account;
 
-                        return setSession({ databasename, username, res, sessionId });
+                        return setSession({ databasename, username, res, sessionId, role_id });
                     } else {
                         const error = new Error('Nieprawidłowy login lub hasło');
 
@@ -110,7 +110,7 @@ router.post('/login', (req, res, next) => {
                         throw error;
                     }
                 })
-                .then(({ message }) => res.json({ message }))
+                .then(({ message, role_id }) => res.json({ message, roleId: role_id }))
                 .catch(error => next(error))
         })
         .catch(error => next(error))
@@ -138,6 +138,7 @@ router.get('/logout', (req, res, next) => {
         usernameHash: hash(username)
     }).then(() => {
         res.clearCookie('sessionString');
+        res.clearCookie('roleId');
 
         res.json({ message: 'Succesful logout' });
     })
@@ -161,7 +162,7 @@ router.get('/logout', (req, res, next) => {
 
 router.get('/authenticated', (req, res, next) => {
     authenticatedAccount({ sessionString: req.cookies.sessionString })
-        .then(({ authenticated }) => res.json({ authenticated }))
+        .then(({ authenticated, roleId }) => res.json({ authenticated, roleId }))
         .catch(error => next(error));
 });
 
@@ -223,8 +224,8 @@ router.post('/trainings', (req, res, next) => {
 
 router.get('/info', (req, res, next) => {
     authenticatedAccount({ sessionString: req.cookies.sessionString })
-        .then(({ account, username }) => {
-            res.json({ info: { balance: account.id, username } });
+        .then(({ account, username, roleId }) => {
+            res.json({ info: { id: account.id, username, roleId } });
         })
         .catch(error => next(error))
 });

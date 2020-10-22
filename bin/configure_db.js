@@ -44,6 +44,7 @@ class ConfigureDB {
                 await schoolPool.query('BEGIN')
                 await schoolPool.query(`CREATE TABLE account(
                     id SERIAL PRIMARY KEY,
+                    "role_id" int,
                     "usernameHash" CHARACTER(64),
                     "passwordHash" CHARACTER(64),
                     "sessionId" CHARACTER(36))`);
@@ -110,13 +111,13 @@ class ConfigureDB {
                         levelid, title, description)
                         VALUES (7, 'wielki mistrz', '');
                     `);
-                await schoolPool.query(`CREATE TABLE "payment" (
-                    "paymentid" SERIAL,
-                    "contestantid" int,
-                    "paydate" date,
-                    "amount" float,
-                        PRIMARY KEY (paymentid)
-                    );`);
+                // await schoolPool.query(`CREATE TABLE "payment" (
+                //     "paymentid" SERIAL,
+                //     "contestantid" int,
+                //     "paydate" date,
+                //     "amount" float,
+                //         PRIMARY KEY (paymentid)
+                //     );`);
                 await schoolPool.query(`CREATE TABLE "gender" (
                     "genderid" SERIAL,
                     "gender_name" text,
@@ -143,15 +144,30 @@ class ConfigureDB {
                     "depth" int,
                         PRIMARY KEY (poolid)
                     );`);
+                await schoolPool.query(`CREATE TABLE "roles" (
+                    "id" SERIAL,
+                    "title" text,
+                        PRIMARY KEY (id)
+                    );
+                    INSERT INTO public.roles(
+                        title)
+                        VALUES ('admin');
+                    INSERT INTO public.roles(
+                        title)
+                        VALUES ('zawodnik');
+                    INSERT INTO public.roles(
+                        title)
+                        VALUES ('trener');
+                    `);
                 await schoolPool.query(`
-                ALTER TABLE "payment" ADD FOREIGN KEY ("contestantid") REFERENCES "contestant" ("contestantid");
                 ALTER TABLE "contestant" ADD FOREIGN KEY ("levelid") REFERENCES "level" ("levelid");
                 ALTER TABLE "contestant" ADD FOREIGN KEY ("genderid") REFERENCES "gender" ("genderid");
                 ALTER TABLE "contestant" ADD FOREIGN KEY ("coachid") REFERENCES "coach" ("coachid");
                 ALTER TABLE "traininglist" ADD FOREIGN KEY ("poolid") REFERENCES "pool" ("poolid");
                 ALTER TABLE "coach" ADD FOREIGN KEY ("genderid") REFERENCES "gender" ("genderid");
                 ALTER TABLE "training" ADD FOREIGN KEY ("id_t") REFERENCES "traininglist" ("trainingid");
-                ALTER TABLE "training" ADD FOREIGN KEY ("id_c") REFERENCES "contestant" ("contestantid");`);
+                ALTER TABLE "training" ADD FOREIGN KEY ("id_c") REFERENCES "contestant" ("contestantid");
+                ALTER TABLE "account" ADD FOREIGN KEY ("role_id") REFERENCES "roles" ("id");`);
                 await schoolPool.query('COMMIT')
             } catch (e) {
                 await schoolPool.query('ROLLBACK')
@@ -164,6 +180,6 @@ class ConfigureDB {
     }
 }
 
-ConfigureDB.addSchoolDatabase({ fullName: 'Szkoła Podstawowa nr 64 w Szczecinie', shortName: 'SP64' });
+ConfigureDB.addSchoolDatabase({ fullName: 'Szkoła Podstawowa nr 32 w Szczecinie', shortName: 'SP32' });
 
 module.exports = ConfigureDB;

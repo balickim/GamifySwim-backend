@@ -20,7 +20,7 @@ class AccountTable {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
             schoolPool.query(
-                `SELECT id, "passwordHash", "sessionId" FROM account 
+                `SELECT id, role_id, "passwordHash", "sessionId" FROM account 
                 WHERE "usernameHash" = $1`,
                 [usernameHash],
                 (error, response) => {

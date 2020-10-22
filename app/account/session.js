@@ -12,7 +12,6 @@ class Session {
 
     toString() {
         const { username, id, database } = this;
-
         return Session.sessionString({ databasename: database, username, id });
     }
 
@@ -46,15 +45,5 @@ class Session {
         return `${accountData}${SEPARATOR}${hash(accountData)}${SEPARATOR}${database}`;
     }
 }
-
-// const foo = new Session({ username: 'foo' });
-// const fooString = foo.toString();
-// console.log("Sesscion.parse(fooString)", Session.parse(fooString));
-
-// console.log(Session.verify(fooString));
-
-// const fake = `admin_${fooString}`;
-
-// console.log(Session.verify(fake));
 
 module.exports = Session;

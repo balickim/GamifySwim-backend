@@ -52,8 +52,9 @@ const authenticatedAccount = ({ sessionString }) => {
             AccountTable.getAccount({ databasename: database, usernameHash: hash(username) })
                 .then(({ account }) => {
                     const authenticated = account.sessionId === id;
+                    const roleId = account.role_id;
 
-                    resolve({ account, authenticated, username });
+                    resolve({ account, authenticated, username, roleId });
                 })
                 .catch(error => reject(error));
         }
