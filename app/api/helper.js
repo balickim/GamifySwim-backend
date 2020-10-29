@@ -2,14 +2,14 @@ const Session = require('../account/session');
 const AccountTable = require('../account/table');
 const { hash } = require('../account/helper');
 
-const setSession = ({ databasename, username, res, sessionId }) => {
+const setSession = ({ databasename, username, res, sessionId, role_id }) => {
     return new Promise((resolve, reject) => {
         let session, sessionString;
         if (sessionId) {
             sessionString = Session.sessionString({ databasename, username, id: sessionId })
             setSessionCookie({ sessionString, res });
 
-            resolve({ message: 'session restored' });
+            resolve({ message: 'session restored', roleId: role_id });
         } else {
             session = new Session({ databasename, username });
             sessionString = session.toString();
@@ -22,7 +22,7 @@ const setSession = ({ databasename, username, res, sessionId }) => {
                 .then(() => {
                     setSessionCookie({ sessionString, res });
 
-                    resolve({ message: 'session created' });
+                    resolve({ message: 'session created', roleId: role_id });
                 })
                 .catch(error => reject(error));
         }

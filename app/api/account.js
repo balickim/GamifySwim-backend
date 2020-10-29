@@ -110,7 +110,7 @@ router.post('/login', (req, res, next) => {
                         throw error;
                     }
                 })
-                .then(({ message, role_id }) => res.json({ message, roleId: role_id }))
+                .then(({ message, roleId }) => res.json({ message, roleId }))
                 .catch(error => next(error))
         })
         .catch(error => next(error))
@@ -138,7 +138,6 @@ router.get('/logout', (req, res, next) => {
         usernameHash: hash(username)
     }).then(() => {
         res.clearCookie('sessionString');
-        res.clearCookie('roleId');
 
         res.json({ message: 'Succesful logout' });
     })
