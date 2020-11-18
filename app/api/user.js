@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const ContestantTable = require('../contestant/table.js');
+const UserTable = require('../user/table.js');
 const CatalogTable = require('../catalog/table.js');
 const Session = require('../account/session');
 const { hash } = require('../account/helper');
@@ -9,14 +9,14 @@ const router = new Router();
 
 /**
 * @swagger
-* /contestant/contestants:
+* /user/contestants:
 *   post:
 *     tags:
-*     - contestant
+*     - user
 *     summary: Get list of contestants
 *     security:
 *     - CookieAuth: []
-*     operationId: contestantlist
+*     operationId: userlist
 *     consumes:
 *     - application/json
 *     parameters:
@@ -40,7 +40,7 @@ router.post('/contestants', (req, res, next) => {
 
     authenticatedAccount({ sessionString: sessionString })
         .then(() => {
-            ContestantTable.contestants({databasename: database, limit: req.body.limit, offset: req.body.offset})
+            UserTable.contestants({databasename: database, limit: req.body.limit, offset: req.body.offset})
                 .then(contestants => {
                     res.json({ contestants });
             })
@@ -50,14 +50,14 @@ router.post('/contestants', (req, res, next) => {
 
 /**
 * @swagger
-* /contestant/info:
+* /user/contestants/info:
 *   post:
 *     tags:
-*     - contestant
+*     - user
 *     summary: Get contestant by id
 *     security:
 *     - CookieAuth: []
-*     operationId: contestant
+*     operationId: user
 *     produces:
 *     - application/json
 *     parameters:
@@ -73,13 +73,13 @@ router.post('/contestants', (req, res, next) => {
 *         description: Ok
 */
 
-router.post('/info', (req, res, next) => {
+router.post('/contestants/info', (req, res, next) => {
     const sessionString = req.cookies.sessionString;
     const { database } = Session.parse(sessionString);
 
     authenticatedAccount({ sessionString: sessionString })
         .then(() => {
-            ContestantTable.contestant({databasename: database, id: req.body.id})
+            UserTable.contestant({databasename: database, id: req.body.id})
                 // .then(({name, secondname}) => {
                 //    res.json({ info: {name, secondname} });
                 .then(contestant => {

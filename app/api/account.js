@@ -9,63 +9,6 @@ const router = new Router();
 
 /**
 * @swagger
-* /account/signup:
-*   post:
-*     tags:
-*     - account
-*     summary: Register new user
-*     operationId: signup
-*     consumes:
-*     - application/json
-*     parameters:
-*     - name: user
-*       in: body
-*       schema:
-*         type: object
-*         properties:
-*           username:
-*             type: string
-*           password:
-*             type: string
-*           shortname:
-*             type: string
-*     responses:
-*       200:
-*         description: Ok
-*/
-
-router.post('/signup', (req, res, next) => {
-    const { username, password, shortname } = req.body;
-    const usernameHash = hash(username);
-    const passwordHash = hash(password);
-
-    CatalogTable.getDatabase({ shortname })
-        .then((databasename) => {
-            AccountTable.getAccount({ databasename, usernameHash })
-                .then(({ account }) => {
-                    if (!account) {
-                        return AccountTable.storeAccount({ databasename, usernameHash, passwordHash })
-                    } else {
-                        const error = new Error('Ten login jest już zajęty!');
-
-                        error.statusCode = 409;
-
-                        throw error;
-                    }
-                })
-                .then(() => {
-                    return setSession({ databasename, username, res });
-
-
-                })
-                .then(({ message }) => { res.json({ message }) })
-                .catch(error => next(error));
-        })
-        .catch(error => next(error));
-});
-
-/**
-* @swagger
 * /account/login:
 *   post:
 *     tags:
@@ -98,10 +41,10 @@ router.post('/login', (req, res, next) => {
         .then((databasename) => {
             AccountTable.getAccount({ databasename, usernameHash: hash(username) })
                 .then(({ account }) => {
-                    if (account && account.passwordHash === hash(password)) {
-                        const { sessionId, role_id } = account;
+                    if (account && account.passwordhash === hash(password)) {
+                        const { sessionid, role_id } = account;
 
-                        return setSession({ databasename, username, res, sessionId, role_id });
+                        return setSession({ databasename, username, res, sessionid, role_id });
                     } else {
                         const error = new Error('Nieprawidłowy login lub hasło');
 

@@ -33,8 +33,8 @@ const setSessionCookie = ({ sessionString, res }) => {
     res.cookie('sessionString', sessionString, {
         expire: Date.now() + 3600000,
         httpOnly: true,
-        secure: true, // use with https
-        sameSite: 'none'
+        // secure: true, // use with https
+        // sameSite: 'none'
     });
 }
 
@@ -51,7 +51,7 @@ const authenticatedAccount = ({ sessionString }) => {
 
             AccountTable.getAccount({ databasename: database, usernameHash: hash(username) })
                 .then(({ account }) => {
-                    const authenticated = account.sessionId === id;
+                    const authenticated = account.sessionid === id;
                     const roleId = account.role_id;
 
                     resolve({ account, authenticated, username, roleId });

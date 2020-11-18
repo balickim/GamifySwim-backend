@@ -3,7 +3,9 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const accountRouter = require('./api/account');
-const contestantRouter = require('./api/contestant');
+const userRouter = require('./api/user');
+const experienceentryRouter = require('./api/experienceentry');
+const adminRouter = require('./api/admin');
 // const trainingRouter = require('./api/training');
 const swaggerUi = require('swagger-ui-express');
 const specs = require('./api/docs/specs');
@@ -18,7 +20,9 @@ app.use(cookieParser());
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use('/account', accountRouter);
-app.use('/contestant', contestantRouter);
+app.use('/user', userRouter);
+app.use('/experience', experienceentryRouter);
+app.use('/admin', adminRouter);
 // app.use('/training', trainingRouter);
 
 app.use((err, req, res, next) => {

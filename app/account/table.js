@@ -1,16 +1,31 @@
 const { connectTo } = require('../../secrets/databaseConfiguration');
 
 class AccountTable {
-    static storeAccount({ databasename, usernameHash, passwordHash }) {
+    static storeAccount({ databasename, usernameHash, passwordHash, userId }) {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
             schoolPool.query(
-                'INSERT INTO account("usernameHash", "passwordHash") VALUES($1,$2)',
-                [usernameHash, passwordHash],
+                'INSERT INTO account("usernamehash", "passwordhash", "role_id", "user_id") VALUES($1,$2,$3,$4)',
+                [usernameHash, passwordHash, 2, userId],
                 (error, response) => {
                     if (error) return reject(error);
 
-                    resolve();
+                    resolve('');
+                }
+            );
+        });
+    }
+
+    static storeUser({ databasename, name, secondname, surname }) {
+        const schoolPool = connectTo(databasename);
+        return new Promise((resolve, reject) => {
+            schoolPool.query(
+                'INSERT INTO public.user("name", "secondname", "surname") VALUES($1,$2,$3) RETURNING id',
+                [name, secondname, surname],
+                (error, response) => {
+                    if (error) return reject(error);
+
+                    resolve({ id: response.rows[0].id });
                 }
             );
         });
@@ -20,8 +35,8 @@ class AccountTable {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
             schoolPool.query(
-                `SELECT id, role_id, "passwordHash", "sessionId" FROM account 
-                WHERE "usernameHash" = $1`,
+                `SELECT id, role_id, "passwordhash", "sessionid" FROM account 
+                WHERE "usernamehash" = $1`,
                 [usernameHash],
                 (error, response) => {
                     if (error) return reject(error);
@@ -36,7 +51,7 @@ class AccountTable {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
             schoolPool.query(
-                'UPDATE account SET "sessionId" = $1 WHERE "usernameHash" = $2',
+                'UPDATE account SET "sessionid" = $1 WHERE "usernamehash" = $2',
                 [sessionId, usernameHash],
                 (error, response) => {
                     if (error) return reject(error);
@@ -51,7 +66,7 @@ class AccountTable {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
             schoolPool.query(
-                'SELECT * FROM traininglist LIMIT $1 OFFSET $2',
+                'SELECT * FROM training LIMIT $1 OFFSET $2',
                 [limit, offset],
                 (error, response) => {
                     if (error) return reject(error);
