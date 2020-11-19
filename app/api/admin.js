@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const AccountTable = require('../account/table.js');
+const AdminTable = require('../admin/table.js');
 const CatalogTable = require('../catalog/table.js');
 const Session = require('../account/session');
 const { hash } = require('../account/helper');
@@ -51,7 +52,7 @@ router.post('/signup', (req, res, next) => {
             AccountTable.getAccount({ databasename: database, usernameHash })
                 .then(({ account }) => {
                     if (!account) {
-                        return AccountTable.storeUser({ databasename: database, name, secondname, surname });
+                        return AdminTable.storeUser({ databasename: database, name, secondname, surname });
                     } else {
                         const error = new Error('Ten login jest już zajęty!');
 
@@ -61,7 +62,7 @@ router.post('/signup', (req, res, next) => {
                     }
                 })
                 .then(({ id }) => {
-                    return AccountTable.storeAccount({ databasename: database, usernameHash, passwordHash, userId: id });
+                    return AdminTable.storeAccount({ databasename: database, usernameHash, passwordHash, userId: id });
                 })
                 .then(({ message }) => { res.json({ message }) })
                 .catch(error => next(error));
