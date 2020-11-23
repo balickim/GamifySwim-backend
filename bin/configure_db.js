@@ -3,8 +3,20 @@ const cPool = require('../databasePool');
 const { connectTo } = require('../secrets/databaseConfiguration');
 const cryptoRandomString = require('crypto-random-string');
 const { hash } = require('../app/account/helper.js');
+const nodemailer = require('nodemailer');
 
 let structureSql = fs.readFileSync('./sql/structure.sql').toString();
+
+let transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    requireTLS: true,
+    auth: {
+        user: 'mbalicki.btc@gmail.com',
+        pass: 'tYmCZasowe333%$#@!^^^5555555'
+    }
+});
 
 class ConfigureDB {
     // static initiate() {
@@ -27,7 +39,7 @@ class ConfigureDB {
     //         }
     //     })().catch(e => console.error(e.stack))
     // }
-    static addSchoolDatabase({ fullName, shortName }) {
+    static addSchoolDatabase({ fullName, shortName, adminEmail }) {
         const randomDatabaseName = cryptoRandomString({ length: 10, characters: 'abcdefghijklmnopqrstuvwxyz' });
         const randomDefaultAdminPassword = cryptoRandomString({ length: 20, characters: 'abcdefghijklmnopqrstuvwxyz' });
 
@@ -73,14 +85,32 @@ class ConfigureDB {
                 await schoolPool.query('ROLLBACK')
                 throw e
             } finally {
+                let mailOptions = {
+                        from: 'mbalicki.btc@gmail.com',
+                        to: adminEmail,
+                        subject: 'GamifySwim - potwierdzenie utworzenia szkoły ' + fullName,
+                        text: `
+                                Login i hasło administratora:
+                                L: admin
+                                P: ${randomDefaultAdminPassword}
+                        `
+                    };
                 console.info(`DATABASE ${randomDatabaseName} - added structure`);
                 console.info(`Admin account password - ${randomDefaultAdminPassword}`);
+
+                transporter.sendMail(mailOptions, function(error, info){
+                    if (error) {
+                        console.error(error);
+                    } else {
+                        console.info('Email sent: ' + info.response);
+                    }
+                });
                 schoolPool.release()
             }
         })().catch(e => console.error(e.stack))
     }
 }
 
-ConfigureDB.addSchoolDatabase({ fullName: 'Szkoła Podstawowa nr 14 w Szczecinie', shortName: 'SP14' });
+ConfigureDB.addSchoolDatabase({ fullName: 'Szkoła Podstawowa nr 20 w Szczecinie', shortName: 'SP20', adminEmail: 'stiekerosiem@gmail.com' });
 
 module.exports = ConfigureDB;
