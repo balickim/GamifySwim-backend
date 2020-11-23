@@ -196,3 +196,11 @@ ALTER TABLE "pool" ADD FOREIGN KEY ("createdbyaccont_id") REFERENCES "account" (
 ALTER TABLE "usertrainingplan" ADD FOREIGN KEY ("createdbyaccont_id") REFERENCES "account" ("id");
 ALTER TABLE "experienceentry" ADD FOREIGN KEY ("createdbyaccont_id") REFERENCES "account" ("id");
 ALTER TABLE "account" ADD FOREIGN KEY ("createdbyaccont_id") REFERENCES "account" ("id");
+
+CREATE VIEW vexperience AS 
+                        SELECT user_id,
+                        sum(amount) as totalamount,
+                        floor(floor(25 + sqrt(625 + 100 * sum(amount))) / 50) as level,  
+                        ((floor(25 + sqrt(625 + 100 * sum(amount))) / 50) - (floor(floor(25 + sqrt(625 + 100 * sum(amount))) / 50))) * 10 as barpercent
+                        FROM experienceentry e
+                        group by user_id

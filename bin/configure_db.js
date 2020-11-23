@@ -72,14 +72,6 @@ class ConfigureDB {
                         INSERT INTO public.user(name) 
                         VALUES('admin');
                     `);
-                await schoolPool.query(`CREATE VIEW vexperience AS 
-                        SELECT user_id,
-                        sum(amount) as totalamount,
-                        floor(floor(25 + sqrt(625 + 100 * sum(amount))) / 50) as level,  
-                        ((floor(25 + sqrt(625 + 100 * sum(amount))) / 50) - (floor(floor(25 + sqrt(625 + 100 * sum(amount))) / 50))) * 10 as barpercent
-                        FROM experienceentry e
-                        group by user_id
-                    `);
                 await schoolPool.query('COMMIT')
             } catch (e) {
                 await schoolPool.query('ROLLBACK')
