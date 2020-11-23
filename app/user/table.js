@@ -62,6 +62,21 @@ class UserTable {
             );
         });
     }
+
+    static trainings({ databasename, limit, offset }) {
+        const schoolPool = connectTo(databasename);
+        return new Promise((resolve, reject) => {
+            schoolPool.query(
+                'SELECT * FROM training LIMIT $1 OFFSET $2',
+                [limit, offset],
+                (error, response) => {
+                    if (error) return reject(error);
+
+                    resolve(response.rows);
+                }
+            );
+        });
+    }
 }
 
 module.exports = UserTable;

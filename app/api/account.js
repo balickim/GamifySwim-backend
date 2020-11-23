@@ -110,47 +110,6 @@ router.get('/authenticated', (req, res, next) => {
 
 /**
 * @swagger
-* /account/trainings:
-*   post:
-*     tags:
-*     - account
-*     summary: Get list of trainings
-*     security:
-*     - CookieAuth: []
-*     operationId: traininglist
-*     consumes:
-*     - application/json
-*     parameters:
-*     - name: user
-*       in: body
-*       schema:
-*         type: object
-*         properties:
-*           limit:
-*             type: integer
-*           offset:
-*             type: integer
-*     responses:
-*       200:
-*         description: Ok
-*/
-
-router.post('/trainings', (req, res, next) => {
-    const sessionString = req.cookies.sessionString;
-    const { database } = Session.parse(sessionString);
-
-    authenticatedAccount({ sessionString: sessionString })
-        .then(() => {
-            AccountTable.trainings({databasename: database, limit: req.body.limit, offset: req.body.offset, })
-                .then(trainings => {
-                    res.json({ trainings });
-            })
-        })
-        .catch(error => next(error));
-});
-
-/**
-* @swagger
 * /account/info:
 *   get:
 *     tags:

@@ -89,4 +89,45 @@ router.post('/contestants/info', (req, res, next) => {
         .catch(error => next(error));
 });
 
+/**
+* @swagger
+* /user/trainings:
+*   post:
+*     tags:
+*     - user
+*     summary: Get list of trainings
+*     security:
+*     - CookieAuth: []
+*     operationId: traininglist
+*     consumes:
+*     - application/json
+*     parameters:
+*     - name: user
+*       in: body
+*       schema:
+*         type: object
+*         properties:
+*           limit:
+*             type: integer
+*           offset:
+*             type: integer
+*     responses:
+*       200:
+*         description: Ok
+*/
+
+router.post('/trainings', (req, res, next) => {
+    const sessionString = req.cookies.sessionString;
+    const { database } = Session.parse(sessionString);
+
+    authenticatedAccount({ sessionString: sessionString })
+        .then(() => {
+            UserTable.trainings({databasename: database, limit: req.body.limit, offset: req.body.offset, })
+                .then(trainings => {
+                    res.json({ trainings });
+            })
+        })
+        .catch(error => next(error));
+});
+
 module.exports = router;
