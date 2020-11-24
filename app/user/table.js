@@ -77,6 +77,26 @@ class UserTable {
             );
         });
     }
+
+    static userTrainingsInMonth({ databasename, user_id, month, year }) {
+        const schoolPool = connectTo(databasename);
+        return new Promise((resolve, reject) => {
+            schoolPool.query(
+                `select u.user_id, t.trainingdatestart,t.trainingdatestop,t.title,t.description,p.title as pooltitle from training t
+                inner join user_usertrainingplan_training_usertrainingresults u on t.id = u.training_id
+                inner join pool p on t.pool_id = p.id
+                where EXTRACT(YEAR FROM t.trainingdatestart) = $1 
+                and EXTRACT(month FROM t.trainingdatestart) = $2
+                and u.user_id = $3`,
+                [year, month, user_id],
+                (error, response) => {
+                    if (error) return reject(error);
+
+                    resolve(response.rows);
+                }
+            );
+        });
+    }
 }
 
 module.exports = UserTable;

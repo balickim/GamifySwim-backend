@@ -130,4 +130,47 @@ router.post('/trainings', (req, res, next) => {
         .catch(error => next(error));
 });
 
+/**
+* @swagger
+* /user/trainingsmonth:
+*   post:
+*     tags:
+*     - user
+*     summary: Get list of trainings in month
+*     security:
+*     - CookieAuth: []
+*     operationId: traininglistmonth
+*     consumes:
+*     - application/json
+*     parameters:
+*     - name: user
+*       in: body
+*       schema:
+*         type: object
+*         properties:
+*           user_id:
+*             type: integer
+*           month:
+*             type: integer
+*           year:
+*             type: integer
+*     responses:
+*       200:
+*         description: Ok
+*/
+
+router.post('/trainingsmonth', (req, res, next) => {
+    const sessionString = req.cookies.sessionString;
+    const { database } = Session.parse(sessionString);
+
+    authenticatedAccount({ sessionString: sessionString })
+        .then(() => {
+            UserTable.userTrainingsInMonth({databasename: database, user_id: req.body.user_id, month: req.body.month, year: req.body.year })
+                .then(trainings => {
+                    res.json({ trainings });
+            })
+        })
+        .catch(error => next(error));
+});
+
 module.exports = router;
