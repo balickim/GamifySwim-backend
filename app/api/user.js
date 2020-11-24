@@ -148,8 +148,6 @@ router.post('/trainings', (req, res, next) => {
 *       schema:
 *         type: object
 *         properties:
-*           account_id:
-*             type: integer
 *           month:
 *             type: integer
 *           year:
@@ -164,8 +162,8 @@ router.post('/trainingsmonth', (req, res, next) => {
     const { database } = Session.parse(sessionString);
 
     authenticatedAccount({ sessionString: sessionString })
-        .then(() => {
-            UserTable.userTrainingsInMonth({databasename: database, account_id: req.body.account_id, month: req.body.month, year: req.body.year })
+        .then(({ account }) => {
+            UserTable.userTrainingsInMonth({databasename: database, account_id: account.id, month: req.body.month, year: req.body.year })
                 .then(trainings => {
                     res.json({ trainings });
             })
