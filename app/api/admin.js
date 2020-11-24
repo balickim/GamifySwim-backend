@@ -52,7 +52,7 @@ router.post('/signup', (req, res, next) => {
             AccountTable.getAccount({ databasename: database, usernameHash })
                 .then(({ account }) => {
                     if (!account) {
-                        return AdminTable.storeUser({ databasename: database, name, secondname, surname });
+                        AdminTable.storeAccount({ databasename: database, usernameHash, passwordHash, name, secondname, surname });
                     } else {
                         const error = new Error('Ten login jest już zajęty!');
 
@@ -60,9 +60,6 @@ router.post('/signup', (req, res, next) => {
 
                         throw error;
                     }
-                })
-                .then(({ id }) => {
-                    return AdminTable.storeAccount({ databasename: database, usernameHash, passwordHash, userId: id });
                 })
                 .then(({ message }) => { res.json({ message }) })
                 .catch(error => next(error));

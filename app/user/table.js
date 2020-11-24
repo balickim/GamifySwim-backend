@@ -5,7 +5,7 @@ class UserTable {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
             schoolPool.query(
-                'SELECT * FROM user LIMIT $1 OFFSET $2',
+                'SELECT * FROM account LIMIT $1 OFFSET $2',
                 [limit, offset],
                 (error, response) => {
                     if (error) return reject(error);
@@ -19,9 +19,8 @@ class UserTable {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
             schoolPool.query(
-                `SELECT u.* FROM public.user as u
-                INNER JOIN account as a on a.user_id = u.id
-                WHERE a.role_id = 2
+                `SELECT u.* FROM account as u
+                WHERE u.role_id = 2
                 LIMIT $1 OFFSET $2`,
                 [limit, offset],
                 (error, response) => {
@@ -36,9 +35,8 @@ class UserTable {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
             schoolPool.query(
-                `SELECT u.* FROM public.user as u
-                INNER JOIN account as a on a.user_id = u.id
-                WHERE a.role_id = 2 AND u.id = $1`,
+                `SELECT u.* FROM account as u
+                WHERE u.role_id = 2 AND u.id = $1`,
                 [id],
                 (error, response) => {
                     if (error) return reject(error);
@@ -52,7 +50,7 @@ class UserTable {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
             schoolPool.query(
-                'SELECT * FROM public.user WHERE id = $1',
+                'SELECT * FROM account WHERE id = $1',
                 [id],
                 (error, response) => {
                     if (error) return reject(error);
@@ -78,17 +76,17 @@ class UserTable {
         });
     }
 
-    static userTrainingsInMonth({ databasename, user_id, month, year }) {
+    static userTrainingsInMonth({ databasename, account_id, month, year }) {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
             schoolPool.query(
-                `select u.user_id, t.trainingdatestart,t.trainingdatestop,t.title,t.description,p.title as pooltitle from training t
+                `select u.account_id, t.trainingdatestart,t.trainingdatestop,t.title,t.description,p.title as pooltitle from training t
                 inner join user_usertrainingplan_training_usertrainingresults u on t.id = u.training_id
                 inner join pool p on t.pool_id = p.id
                 where EXTRACT(YEAR FROM t.trainingdatestart) = $1 
                 and EXTRACT(month FROM t.trainingdatestart) = $2
-                and u.user_id = $3`,
-                [year, month, user_id],
+                and u.account_id = $3`,
+                [year, month, account_id],
                 (error, response) => {
                     if (error) return reject(error);
 

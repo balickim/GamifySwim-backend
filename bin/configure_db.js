@@ -64,14 +64,10 @@ class ConfigureDB {
                 await schoolPool.query('BEGIN')
                 await schoolPool.query(structureSql);
                 await schoolPool.query(`
-                        INSERT INTO account(role_id, user_id, usernamehash, passwordhash) 
-                        VALUES($3, $4, $1, $2)`,
-                        [usernameHash, passwordHash, 1, 1]
+                        INSERT INTO account(role_id, usernamehash, passwordhash) 
+                        VALUES($1, $2, $3)`,
+                        [1, usernameHash, passwordHash]
                     );
-                await schoolPool.query(`
-                        INSERT INTO public.user(name) 
-                        VALUES('admin');
-                    `);
                 await schoolPool.query('COMMIT')
             } catch (e) {
                 await schoolPool.query('ROLLBACK')
@@ -103,6 +99,6 @@ class ConfigureDB {
     }
 }
 
-ConfigureDB.addSchoolDatabase({ fullName: 'Szkoła Podstawowa nr 20 w Szczecinie', shortName: 'SP20', adminEmail: 'stiekerosiem@gmail.com' });
+ConfigureDB.addSchoolDatabase({ fullName: 'Szkoła Podstawowa nr 1 w Szczecinie', shortName: 'SP1', adminEmail: 'stiekerosiem@gmail.com' });
 
 module.exports = ConfigureDB;

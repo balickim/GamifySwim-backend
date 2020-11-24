@@ -1,10 +1,16 @@
 CREATE TABLE "account" (
                         "id" SERIAL PRIMARY KEY,
                         "role_id" int,
-                        "user_id" int,
+                        "levelofadvancement_id" int,
+                        "gender_id" int,
                         "usernamehash" CHARACTER(64),
                         "passwordhash" CHARACTER(64),
                         "sessionid" CHARACTER(36),
+                        "name" varchar(30),
+                        "secondname" varchar(30),
+                        "surname" varchar(30),
+                        "birthdate" date,
+                        "avatarimagepath" varchar(50),
                         "createddate" timestamp not null default CURRENT_TIMESTAMP,
                         "createdbyaccont_id" int,
                         "deleted" boolean
@@ -34,7 +40,7 @@ CREATE TABLE "role" (
 
 CREATE TABLE "experienceentry" (
                         "id" SERIAL PRIMARY KEY,
-                        "user_id" int not null,
+                        "account_id" int not null,
                         "title" varchar(50),
                         "amount" int,
                         "createddate" timestamp not null default CURRENT_TIMESTAMP,
@@ -80,7 +86,7 @@ CREATE TABLE "gender" (
 CREATE TABLE "user_achievement" (
                         "id" SERIAL PRIMARY KEY,
                         "achievement_id" int,
-                        "user_id" int not null,
+                        "account_id" int not null,
                         "awardeddate" timestamp
                     );
 
@@ -122,19 +128,8 @@ CREATE TABLE "usertrainingresults" (
                         "totaltimemiliseconds" bigint
                     );
 
-CREATE TABLE "user" (
-                        "id" SERIAL PRIMARY KEY,
-                        "levelofadvancement_id" int,
-                        "gender_id" int,
-                        "name" varchar(30),
-                        "secondname" varchar(30),
-                        "surname" varchar(30),
-                        "birthdate" date,
-                        "avatarimagepath" varchar(50)
-                    );
-
 CREATE TABLE "user_usertrainingplan_training_usertrainingresults" (
-                        "user_id" int not null,
+                        "account_id" int not null,
                         "usertrainingplan_id" int,
                         "training_id" int,
                         "usertrainingresults_id" int
@@ -198,24 +193,23 @@ CREATE TABLE "pool" (
                     VALUES('domyślny', 'Domyślny basen', 25, 50, 5, CURRENT_TIMESTAMP, 1, false);
 
 
-CREATE UNIQUE INDEX ON "account" ("user_id");
 CREATE UNIQUE INDEX ON "usertrainingresults" ("id");
 -- CREATE UNIQUE INDEX ON "usertrainingplan" ("id");
 ALTER TABLE "account" ADD FOREIGN KEY ("role_id") REFERENCES "role" ("id");
-ALTER TABLE "experienceentry" ADD FOREIGN KEY ("user_id") REFERENCES "user" ("id");
+ALTER TABLE "experienceentry" ADD FOREIGN KEY ("account_id") REFERENCES "account" ("id");
 ALTER TABLE "condition" ADD FOREIGN KEY ("achievement_id") REFERENCES "achievement" ("id");
 ALTER TABLE "user_achievement" ADD FOREIGN KEY ("achievement_id") REFERENCES "achievement" ("id");
-ALTER TABLE "user_achievement" ADD FOREIGN KEY ("user_id") REFERENCES "user" ("id");
-ALTER TABLE "user" ADD FOREIGN KEY ("levelofadvancement_id") REFERENCES "levelofadvancement" ("id");
-ALTER TABLE "user" ADD FOREIGN KEY ("gender_id") REFERENCES "gender" ("id");
+ALTER TABLE "user_achievement" ADD FOREIGN KEY ("account_id") REFERENCES "account" ("id");
+ALTER TABLE "account" ADD FOREIGN KEY ("levelofadvancement_id") REFERENCES "levelofadvancement" ("id");
+ALTER TABLE "account" ADD FOREIGN KEY ("gender_id") REFERENCES "gender" ("id");
 ALTER TABLE "training" ADD FOREIGN KEY ("pool_id") REFERENCES "pool" ("id");
 ALTER TABLE "user_usertrainingplan_training_usertrainingresults" ADD FOREIGN KEY ("training_id") REFERENCES "training" ("id");
-ALTER TABLE "user_usertrainingplan_training_usertrainingresults" ADD FOREIGN KEY ("user_id") REFERENCES "user" ("id");
+ALTER TABLE "user_usertrainingplan_training_usertrainingresults" ADD FOREIGN KEY ("account_id") REFERENCES "account" ("id");
 ALTER TABLE "usertrainingplan" ADD FOREIGN KEY ("swimmingstyle_id") REFERENCES "swimmingstyle" ("id");
 -- ALTER TABLE "user_usertrainingplan_training_usertrainingresults" ADD FOREIGN KEY ("usertrainingplan_id") REFERENCES "usertrainingplan" ("id");
 ALTER TABLE "user_usertrainingplan_training_usertrainingresults" ADD FOREIGN KEY ("usertrainingresults_id") REFERENCES "usertrainingresults" ("id");
 ALTER TABLE "usertrainingresults" ADD FOREIGN KEY ("swimmingstyle_id") REFERENCES "swimmingstyle" ("id");
-ALTER TABLE "training" ADD FOREIGN KEY ("coach_user_id") REFERENCES "user" ("id");
+ALTER TABLE "training" ADD FOREIGN KEY ("coach_user_id") REFERENCES "account" ("id");
 ALTER TABLE "sessionhistory" ADD FOREIGN KEY ("account_id") REFERENCES "account" ("id");
 -- ALTER TABLE "training" ADD FOREIGN KEY ("createdbyaccont_id") REFERENCES "account" ("id");
 -- ALTER TABLE "pool" ADD FOREIGN KEY ("createdbyaccont_id") REFERENCES "account" ("id");
@@ -224,9 +218,9 @@ ALTER TABLE "sessionhistory" ADD FOREIGN KEY ("account_id") REFERENCES "account"
 -- ALTER TABLE "account" ADD FOREIGN KEY ("createdbyaccont_id") REFERENCES "account" ("id");
 
 CREATE VIEW vexperience AS 
-                        SELECT user_id,
+                        SELECT account_id,
                         sum(amount) as totalamount,
                         floor(floor(25 + sqrt(625 + 100 * sum(amount))) / 50) as level,  
                         ((floor(25 + sqrt(625 + 100 * sum(amount))) / 50) - (floor(floor(25 + sqrt(625 + 100 * sum(amount))) / 50))) * 10 as barpercent
                         FROM experienceentry e
-                        group by user_id
+                        group by account_id

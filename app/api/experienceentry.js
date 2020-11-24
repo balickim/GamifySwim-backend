@@ -25,7 +25,7 @@ const router = new Router();
 *       schema:
 *         type: object
 *         properties:
-*           user_id:
+*           account_id:
 *             type: integer
 *           title:
 *             type: string
@@ -42,7 +42,7 @@ router.post('/experienceentry', (req, res, next) => {
 
     authenticatedAccount({ sessionString: sessionString })
         .then(() => {
-            ExperienceTable.storeExperienceEntry({databasename: database, user_id: req.body.user_id, title: req.body.title, amount: req.body.amount})
+            ExperienceTable.storeExperienceEntry({databasename: database, account_id: req.body.account_id, title: req.body.title, amount: req.body.amount})
                 .then(() => {
                     res.json({message: 'experienceentry entry added'});
             })
