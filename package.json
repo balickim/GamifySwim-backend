@@ -6,8 +6,9 @@
   "scripts": {
     "start": "node ./bin/server.js",
     "dev": "nodemon ./bin/server.js",
-    "configure": "./bin/configure_db.sh",
-    "configure-dev": "npm run configure && npm run dev"
+    "generate-dbml": "sql2dbml --postgres ./bin/sql/structure.sql -o ./bin/sql/structure.dbml",
+    "build-dbdocs": "dbdocs build ./bin/sql/structure.dbml --password epicpassword",
+    "start-dbdocs": "npm run generate-dbml && npm run build-dbdocs"
   },
   "author": "",
   "license": "ISC",

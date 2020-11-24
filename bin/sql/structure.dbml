@@ -1,0 +1,168 @@
+Table "account" {
+  "id" int [pk, increment]
+  "role_id" int
+  "levelofadvancement_id" int
+  "gender_id" int
+  "usernamehash" CHARACTER(64)
+  "passwordhash" CHARACTER(64)
+  "sessionid" CHARACTER(36)
+  "name" varchar(30)
+  "secondname" varchar(30)
+  "surname" varchar(30)
+  "birthdate" date
+  "avatarimagepath" varchar(50)
+  "createddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  "createdbyaccont_id" int
+  "deleted" boolean
+}
+
+Table "sessionhistory" {
+  "id" int [pk, increment]
+  "account_id" int
+  "sessiondatestart" timestamp
+  "sessiondatestop" timestamp
+  "deviceinfo" text
+}
+
+Table "role" {
+  "id" int [pk, increment]
+  "title" varchar(50)
+}
+
+Table "experienceentry" {
+  "id" int [pk, increment]
+  "account_id" int [not null]
+  "title" varchar(50)
+  "amount" int
+  "createddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  "createdbyaccont_id" int
+}
+
+Table "levelofadvancement" {
+  "id" int [pk, increment]
+  "title" varchar(50)
+  "description" text
+}
+
+Table "gender" {
+  "id" int [pk, increment]
+  "gendername" text
+}
+
+Table "user_achievement" {
+  "id" int [pk, increment]
+  "achievement_id" int
+  "account_id" int [not null]
+  "awardeddate" timestamp
+}
+
+Table "condition" {
+  "id" int [pk, increment]
+  "achievement_id" int
+  "condition" text
+  "fulfilled" boolean
+}
+
+Table "achievement" {
+  "id" int [pk, increment]
+  "name" varchar(50)
+  "imagepath" varchar(50)
+}
+
+Table "training" {
+  "id" int [pk, increment]
+  "pool_id" int
+  "coach_user_id" int
+  "trainingdatestart" timestamp
+  "trainingdatestop" timestamp
+  "title" varchar(50)
+  "description" text
+  "held" boolean
+  "createddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  "createdbyaccont_id" int
+  "deleted" boolean
+}
+
+Table "usertrainingresults" {
+  "id" int
+  "swimmingstyle_id" int
+  "title" varchar(50)
+  "description" text
+  "actualrepetitions" int2
+  "actuallength" int2
+  "caloriesburnt" int2
+  "totaltimemiliseconds" bigint
+
+Indexes {
+  id [unique]
+}
+}
+
+Table "user_usertrainingplan_training_usertrainingresults" {
+  "account_id" int [not null]
+  "usertrainingplan_id" int
+  "training_id" int
+  "usertrainingresults_id" int
+}
+
+Table "usertrainingplan" {
+  "id" int
+  "swimmingstyle_id" int
+  "title" varchar(50)
+  "description" text
+  "repetitions" int2
+  "breakseconds" int2
+  "length" int2
+  "fulfilled" boolean
+  "createddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  "createdbyaccont_id" int
+  "deleted" boolean
+}
+
+Table "swimmingstyle" {
+  "id" int [pk, increment]
+  "title" varchar(50)
+  "description" text
+}
+
+Table "pool" {
+  "id" int [pk, increment]
+  "title" varchar(50)
+  "description" text
+  "width" int2
+  "length" int2
+  "depth" int2
+  "createddate" timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  "createdbyaccont_id" int
+  "deleted" boolean
+}
+
+Ref:"role"."id" < "account"."role_id"
+
+Ref:"account"."id" < "experienceentry"."account_id"
+
+Ref:"achievement"."id" < "condition"."achievement_id"
+
+Ref:"achievement"."id" < "user_achievement"."achievement_id"
+
+Ref:"account"."id" < "user_achievement"."account_id"
+
+Ref:"levelofadvancement"."id" < "account"."levelofadvancement_id"
+
+Ref:"gender"."id" < "account"."gender_id"
+
+Ref:"pool"."id" < "training"."pool_id"
+
+Ref:"training"."id" < "user_usertrainingplan_training_usertrainingresults"."training_id"
+
+Ref:"account"."id" < "user_usertrainingplan_training_usertrainingresults"."account_id"
+
+Ref:"swimmingstyle"."id" < "usertrainingplan"."swimmingstyle_id"
+
+Ref:"usertrainingresults"."id" < "user_usertrainingplan_training_usertrainingresults"."usertrainingresults_id"
+
+Ref:"swimmingstyle"."id" < "usertrainingresults"."swimmingstyle_id"
+
+Ref:"account"."id" < "training"."coach_user_id"
+
+Ref:"account"."id" < "sessionhistory"."account_id"

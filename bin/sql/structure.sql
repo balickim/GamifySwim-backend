@@ -223,4 +223,4 @@ CREATE VIEW vexperience AS
                         floor(floor(25 + sqrt(625 + 100 * sum(amount))) / 50) as level,  
                         ((floor(25 + sqrt(625 + 100 * sum(amount))) / 50) - (floor(floor(25 + sqrt(625 + 100 * sum(amount))) / 50))) * 10 as barpercent
                         FROM experienceentry e
-                        group by account_id
+                        group by account_id;
