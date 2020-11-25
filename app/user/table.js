@@ -80,7 +80,7 @@ class UserTable {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
             schoolPool.query(
-                `select u.account_id, t.trainingdatestart,t.trainingdatestop,t.title,t.description,p.title as pooltitle from training t
+                `select u.account_id,t.id,t.trainingdatestart,t.trainingdatestop,t.title,t.description,p.title as pooltitle from training t
                 inner join user_usertrainingplan_training_usertrainingresults u on t.id = u.training_id
                 inner join pool p on t.pool_id = p.id
                 where EXTRACT(YEAR FROM t.trainingdatestart) = $1 
@@ -91,6 +91,21 @@ class UserTable {
                     if (error) return reject(error);
 
                     resolve(response.rows);
+                }
+            );
+        });
+    }
+
+    static trainingInfo({ databasename, id }) {
+        const schoolPool = connectTo(databasename);
+        return new Promise((resolve, reject) => {
+            schoolPool.query(
+                'select t.* from training t where t.id = $1',
+                [id],
+                (error, response) => {
+                    if (error) return reject(error);
+
+                    resolve(response.rows[0]);
                 }
             );
         });
