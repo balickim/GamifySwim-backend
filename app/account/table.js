@@ -6,7 +6,7 @@ class AccountTable {
         return new Promise((resolve, reject) => {
             schoolPool.query(
                 `SELECT id, role_id, "passwordhash", "sessionid" FROM account 
-                WHERE "usernamehash" = $1`,
+                WHERE "usernamehash" = $1 AND deleted = false`,
                 [usernameHash],
                 (error, response) => {
                     if (error) return reject(error);

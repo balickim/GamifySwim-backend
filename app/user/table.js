@@ -5,7 +5,7 @@ class UserTable {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
             schoolPool.query(
-                'SELECT * FROM account LIMIT $1 OFFSET $2',
+                'SELECT * FROM account WHERE deleted = false LIMIT $1 OFFSET $2',
                 [limit, offset],
                 (error, response) => {
                     if (error) return reject(error);
@@ -21,6 +21,7 @@ class UserTable {
             schoolPool.query(
                 `SELECT u.* FROM account as u
                 WHERE u.role_id = 2
+                AND deleted = false
                 LIMIT $1 OFFSET $2`,
                 [limit, offset],
                 (error, response) => {
@@ -36,7 +37,7 @@ class UserTable {
         return new Promise((resolve, reject) => {
             schoolPool.query(
                 `SELECT u.* FROM account as u
-                WHERE u.role_id = 2 AND u.id = $1`,
+                WHERE u.role_id = 2 AND u.id = $1 AND u.deleted = false`,
                 [id],
                 (error, response) => {
                     if (error) return reject(error);
@@ -50,7 +51,7 @@ class UserTable {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
             schoolPool.query(
-                'SELECT * FROM account WHERE id = $1',
+                'SELECT * FROM account WHERE id = $1 AND deleted = false',
                 [id],
                 (error, response) => {
                     if (error) return reject(error);
@@ -65,7 +66,7 @@ class UserTable {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
             schoolPool.query(
-                'SELECT * FROM training LIMIT $1 OFFSET $2',
+                'SELECT * FROM training WHERE deleted = false LIMIT $1 OFFSET $2',
                 [limit, offset],
                 (error, response) => {
                     if (error) return reject(error);
@@ -85,7 +86,8 @@ class UserTable {
                 inner join pool p on t.pool_id = p.id
                 where EXTRACT(YEAR FROM t.trainingdatestart) = $1 
                 and EXTRACT(month FROM t.trainingdatestart) = $2
-                and u.account_id = $3`,
+                and u.account_id = $3
+                AND t.deleted = false`,
                 [year, month, account_id],
                 (error, response) => {
                     if (error) return reject(error);
@@ -100,7 +102,7 @@ class UserTable {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
             schoolPool.query(
-                'select t.* from training t where t.id = $1',
+                'select t.* from training t where t.id = $1 AND t.deleted = false',
                 [id],
                 (error, response) => {
                     if (error) return reject(error);
