@@ -34,13 +34,21 @@ const router = new Router();
 *             type: string
 *           surname:
 *             type: string
+*           roleId:
+*             type: integer
+*           birthdate:
+*             type: string
+*           gender:
+*             type: integer
+*           deleted:
+*             type: boolean
 *     responses:
 *       200:
 *         description: Ok
 */
 
 router.post('/signup', (req, res, next) => {
-    const { username, password, name, secondname, surname, roleId, birthdate, gender } = req.body;
+    const { username, password, name, secondname, surname, roleId, birthdate, gender, deleted } = req.body;
     const usernameHash = hash(username);
     const passwordHash = hash(password);
 
@@ -53,7 +61,7 @@ router.post('/signup', (req, res, next) => {
             AccountTable.getAccount({ databasename: database, usernameHash })
                 .then(({ account }) => {
                     if (!account) {
-                        AdminTable.storeAccount({ databasename: database, roleId, usernameHash, passwordHash, name, secondname, surname, birthdate, gender, createdByAccountId });
+                        return AdminTable.storeAccount({ databasename: database, roleId, usernameHash, passwordHash, name, secondname, surname, birthdate, gender, createdByAccountId, deleted });
                     } else {
                         const error = new Error('Ten login jest już zajęty!');
 
@@ -62,10 +70,9 @@ router.post('/signup', (req, res, next) => {
                         throw error;
                     }
                 })
-                .then(({ message }) => { res.json({ message }) })
+                .then(({ message }) => res.json({ message }))
                 .catch(error => next(error));
         })
-        .catch(error => next(error));
 });
 
 module.exports = router;
