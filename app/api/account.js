@@ -35,16 +35,16 @@ const router = new Router();
 */
 
 router.post('/login', (req, res, next) => {
-    const { username, password, shortname } = req.body;
+    const { username, password, shortname, deviceinfo } = req.body;
 
     CatalogTable.getDatabase({ shortname })
         .then((databasename) => {
             AccountTable.getAccount({ databasename, usernameHash: hash(username) })
                 .then(({ account }) => {
                     if (account && account.passwordhash === hash(password)) {
-                        const { sessionid, role_id } = account;
+                        const { sessionid, role_id, id } = account;
 
-                        return setSession({ databasename, username, res, sessionid, role_id });
+                        return setSession({ databasename, username, res, sessionid, role_id, account_id: id, deviceinfo });
                     } else {
                         const error = new Error('Nieprawidłowy login lub hasło');
 
@@ -73,7 +73,7 @@ router.post('/login', (req, res, next) => {
 */
 
 router.get('/logout', (req, res, next) => {
-    const { username, database } = Session.parse(req.cookies.sessionString);
+    const { username, database, id } = Session.parse(req.cookies.sessionString);
 
     AccountTable.updateSessionId({
         databasename: database,
@@ -83,6 +83,8 @@ router.get('/logout', (req, res, next) => {
         res.clearCookie('sessionString');
 
         res.json({ message: 'Succesful logout' });
+    }).then(() => {
+        AccountTable.updateSessionLogoutTimestamp({ databasename: database, sessionId: id })
     })
         .catch(error => next(error));
 });

@@ -2,7 +2,7 @@ const Session = require('../account/session');
 const AccountTable = require('../account/table');
 const { hash } = require('../account/helper');
 
-const setSession = ({ databasename, username, res, sessionId, role_id }) => {
+const setSession = ({ databasename, username, res, sessionId, role_id, account_id, deviceinfo }) => {
     return new Promise((resolve, reject) => {
         let session, sessionString;
         if (sessionId) {
@@ -23,6 +23,14 @@ const setSession = ({ databasename, username, res, sessionId, role_id }) => {
                     setSessionCookie({ sessionString, res });
 
                     resolve({ message: 'session created', roleId: role_id });
+                })
+                .then(() => {
+                    AccountTable.addSessionInfo({ 
+                    databasename, 
+                    sessionId: session.id, 
+                    account_id, 
+                    deviceinfo
+                    })
                 })
                 .catch(error => reject(error));
         }

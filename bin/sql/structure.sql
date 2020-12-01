@@ -11,16 +11,16 @@ CREATE TABLE "account" (
                         "surname" varchar(30),
                         "birthdate" date,
                         "avatarimagepath" varchar(50),
-                        "createddate" timestamp not null default CURRENT_TIMESTAMP,
+                        "createddate" timestamptz not null default CURRENT_TIMESTAMP,
                         "createdbyaccont_id" int,
                         "deleted" boolean
                     );
 
 CREATE TABLE "sessionhistory" (
-                        "id" SERIAL PRIMARY KEY,
+                        "sessionid" CHARACTER(36),
                         "account_id" int,
-                        "sessiondatestart" timestamp,
-                        "sessiondatestop" timestamp,
+                        "sessiondatestart" timestamptz not null default CURRENT_TIMESTAMP,
+                        "sessiondatestop" timestamptz,
                         "deviceinfo" text
                     );
 
@@ -43,7 +43,7 @@ CREATE TABLE "experienceentry" (
                         "account_id" int not null,
                         "title" varchar(50),
                         "amount" int,
-                        "createddate" timestamp not null default CURRENT_TIMESTAMP,
+                        "createddate" timestamptz not null default CURRENT_TIMESTAMP,
                         "createdbyaccont_id" int
                     );
 
@@ -87,7 +87,7 @@ CREATE TABLE "user_achievement" (
                         "id" SERIAL PRIMARY KEY,
                         "achievement_id" int,
                         "account_id" int not null,
-                        "awardeddate" timestamp
+                        "awardeddate" timestamptz
                     );
 
 CREATE TABLE "condition" (
@@ -107,12 +107,12 @@ CREATE TABLE "training" (
                         "id" SERIAL PRIMARY KEY,
                         "pool_id" int,
                         "coach_user_id" int,
-                        "trainingdatestart" timestamp,
-                        "trainingdatestop" timestamp,
+                        "trainingdatestart" timestamptz,
+                        "trainingdatestop" timestamptz,
                         "title" varchar(50),
                         "description" text,
                         "held" boolean,
-                        "createddate" timestamp not null default CURRENT_TIMESTAMP,
+                        "createddate" timestamptz not null default CURRENT_TIMESTAMP,
                         "createdbyaccont_id" int,
                         "deleted" boolean
                     );
@@ -144,7 +144,7 @@ CREATE TABLE "usertrainingplan" (
                         "breakseconds" int2,
                         "length" int2,
                         "fulfilled" boolean,
-                        "createddate" timestamp not null default CURRENT_TIMESTAMP,
+                        "createddate" timestamptz not null default CURRENT_TIMESTAMP,
                         "createdbyaccont_id" int,
                         "deleted" boolean
                     );
@@ -183,7 +183,7 @@ CREATE TABLE "pool" (
                         "width" int2,
                         "length" int2,
                         "depth" int2,
-                        "createddate" timestamp not null default CURRENT_TIMESTAMP,
+                        "createddate" timestamptz not null default CURRENT_TIMESTAMP,
                         "createdbyaccont_id" int,
                         "deleted" boolean
                     );
