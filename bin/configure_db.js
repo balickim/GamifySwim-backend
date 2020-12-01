@@ -69,9 +69,9 @@ class ConfigureDB {
                         await schoolPool.query('BEGIN')
                         await schoolPool.query(structureSql);
                         await schoolPool.query(`
-                                INSERT INTO account(role_id, usernamehash, passwordhash) 
-                                VALUES($1, $2, $3)`,
-                                [1, usernameHash, passwordHash]
+                                INSERT INTO account(role_id, usernamehash, passwordhash, deleted) 
+                                VALUES($1, $2, $3, $4)`,
+                                [1, usernameHash, passwordHash, false]
                             );
                         await schoolPool.query('COMMIT')
                     } catch (e) {
