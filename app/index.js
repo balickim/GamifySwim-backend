@@ -6,7 +6,7 @@ const accountRouter = require('./api/account');
 const userRouter = require('./api/user');
 const experienceentryRouter = require('./api/experienceentry');
 const adminRouter = require('./api/admin');
-// const trainingRouter = require('./api/training');
+const trainerRouter = require('./api/trainer');
 const swaggerUi = require('swagger-ui-express');
 const specs = require('./api/docs/specs');
 
@@ -23,7 +23,7 @@ app.use('/account', accountRouter);
 app.use('/user', userRouter);
 app.use('/experience', experienceentryRouter);
 app.use('/admin', adminRouter);
-// app.use('/training', trainingRouter);
+app.use('/trainer', trainerRouter);
 
 app.use((err, req, res, next) => {
     const statusCode = err.StatusCode || 500;
