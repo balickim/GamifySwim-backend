@@ -97,7 +97,7 @@ router.get('/accounts', (req, res, next) => {
     authenticatedAccount({ sessionString: sessionString })
         .then(() => {
             AdminTable.getAllAccounts({databasename: database})
-                .then((swimmingstyles) => res.json({ swimmingstyles }))
+                .then((accounts) => res.json({ accounts }))
                 .catch(error => next(error));
         })
 });
