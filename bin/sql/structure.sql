@@ -225,3 +225,10 @@ CREATE VIEW vexperience AS
                         ((floor(25 + sqrt(625 + 100 * sum(amount))) / 50) - (floor(floor(25 + sqrt(625 + 100 * sum(amount))) / 50))) * 10 as barpercent
                         FROM experienceentry e
                         group by account_id;
+
+CREATE VIEW vaccount AS
+                        select a.id, r.title as role, l.title as levelofadvancement, g.gendername, a."name", a.secondname, a.surname, a.birthdate, a.avatarimagepath, createddate, a.createdbyaccont_id, a.deleted  
+                        from "account" a
+                        left join "role" r on a.role_id = r.id 
+                        left join levelofadvancement l on a.levelofadvancement_id = l.id 
+                        left join gender g on a.gender_id = g.id;

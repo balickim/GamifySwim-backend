@@ -75,4 +75,31 @@ router.post('/signup', (req, res, next) => {
         })
 });
 
+/**
+* @swagger
+* /admin/accounts:
+*   get:
+*     tags:
+*     - admin
+*     summary: get all accounts
+*     security:
+*     - CookieAuth: []
+*     operationId: getallaccounts
+*     responses:
+*       200:
+*         description: Ok
+*/
+
+router.get('/accounts', (req, res, next) => {
+    const sessionString = req.cookies.sessionString;
+    const { database } = Session.parse(sessionString);
+
+    authenticatedAccount({ sessionString: sessionString })
+        .then(() => {
+            AdminTable.getAllAccounts({databasename: database})
+                .then((swimmingstyles) => res.json({ swimmingstyles }))
+                .catch(error => next(error));
+        })
+});
+
 module.exports = router;

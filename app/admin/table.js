@@ -25,6 +25,20 @@ class AdminTable {
             );
         });
     }
+
+    static getAllAccounts({ databasename }) {
+        const schoolPool = connectTo(databasename);
+        return new Promise((resolve, reject) => {
+            schoolPool.query(
+                `SELECT * from vaccount`,
+                (error, response) => {
+                    if (error) return reject(error);
+
+                    resolve(response.rows);
+                }
+            );
+        });
+    }
 }
 
 module.exports = AdminTable;
