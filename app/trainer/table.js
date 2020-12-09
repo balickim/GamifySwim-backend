@@ -28,7 +28,7 @@ class TrainerTables {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
             schoolPool.query(
-                'SELECT * from training WHERE deleted = false ',
+                'SELECT * from vtraining WHERE deleted = false ',
                 (error, response) => {
                     if (error) return reject(error);
 

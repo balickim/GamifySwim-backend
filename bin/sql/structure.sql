@@ -219,16 +219,23 @@ ALTER TABLE "sessionhistory" ADD FOREIGN KEY ("account_id") REFERENCES "account"
 -- ALTER TABLE "account" ADD FOREIGN KEY ("createdbyaccont_id") REFERENCES "account" ("id");
 
 CREATE VIEW vexperience AS 
-                        SELECT account_id,
-                        sum(amount) as totalamount,
-                        floor(floor(25 + sqrt(625 + 100 * sum(amount))) / 50) as level,  
-                        ((floor(25 + sqrt(625 + 100 * sum(amount))) / 50) - (floor(floor(25 + sqrt(625 + 100 * sum(amount))) / 50))) * 10 as barpercent
-                        FROM experienceentry e
-                        group by account_id;
+    SELECT account_id,
+    sum(amount) as totalamount,
+    floor(floor(25 + sqrt(625 + 100 * sum(amount))) / 50) as level,  
+    ((floor(25 + sqrt(625 + 100 * sum(amount))) / 50) - (floor(floor(25 + sqrt(625 + 100 * sum(amount))) / 50))) * 10 as barpercent
+    FROM experienceentry e
+    group by account_id;
 
 CREATE VIEW vaccount AS
-                        select a.id, r.title as role, l.title as levelofadvancement, g.gendername, a."name", a.secondname, a.surname, a.birthdate, a.avatarimagepath, createddate, a.createdbyaccont_id, a.deleted  
-                        from "account" a
-                        left join "role" r on a.role_id = r.id 
-                        left join levelofadvancement l on a.levelofadvancement_id = l.id 
-                        left join gender g on a.gender_id = g.id;
+    select a.id, r.title as role, l.title as levelofadvancement, g.gendername, a."name", a.secondname, a.surname, a.birthdate, a.avatarimagepath, createddate, a.createdbyaccont_id, a.deleted  
+    from "account" a
+    left join "role" r on a.role_id = r.id 
+    left join levelofadvancement l on a.levelofadvancement_id = l.id 
+    left join gender g on a.gender_id = g.id;
+
+CREATE VIEW vtraining AS
+	select p.title as pooltitle, CONCAT (a.name, ' ', a.surname) as trainerfullname, t.trainingdatestart, t.trainingdatestop, t.title, t.description, t.held, CONCAT (a2.name, ' ', a2.surname) as createdby, t.createddate, t.deleted 
+	from training t
+	left join pool p on t.pool_id = p.id
+	join account a on t.coach_user_id = a.id 
+	join account a2 on t.createdbyaccont_id = a2.id
