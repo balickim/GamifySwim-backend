@@ -30,7 +30,25 @@ class AdminTable {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
             schoolPool.query(
-                `SELECT * from vaccount`,
+                'SELECT * from vaccount',
+                (error, response) => {
+                    if (error) return reject(error);
+
+                    resolve(response.rows);
+                }
+            );
+        });
+    }
+
+    static getAccountSessionHistory({ databasename, account_id }) {
+        const schoolPool = connectTo(databasename);
+        return new Promise((resolve, reject) => {
+            schoolPool.query(
+                `select s.* from sessionhistory s
+                left join account a on s.account_id = a.id 
+                where account_id = $1
+                and a.deleted is false`,
+                [account_id],
                 (error, response) => {
                     if (error) return reject(error);
 

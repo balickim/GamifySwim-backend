@@ -102,4 +102,42 @@ router.get('/accounts', (req, res, next) => {
         })
 });
 
+/**
+* @swagger
+* /admin/accountsessionhistory:
+*   post:
+*     tags:
+*     - admin
+*     summary: get accaunts session history
+*     security:
+*     - CookieAuth: []
+*     operationId: getaccountsessionhistory
+*     consumes:
+*     - application/json
+*     parameters:
+*     - name: user
+*       in: body
+*       schema:
+*         type: object
+*         properties:
+*           account_id:
+*             type: integer
+*     responses:
+*       200:
+*         description: Ok
+*/
+
+router.post('/accountsessionhistory', (req, res, next) => {
+    const { account_id } = req.body;
+    const sessionString = req.cookies.sessionString;
+    const { database } = Session.parse(sessionString);
+    
+    authenticatedAccount({ sessionString: sessionString })
+        .then(() => {
+            AdminTable.getAccountSessionHistory({databasename: database, account_id})
+                .then((sessionhistory) => res.json({ sessionhistory }))
+                .catch(error => next(error));
+        })
+});
+
 module.exports = router;
