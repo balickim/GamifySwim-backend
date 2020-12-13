@@ -82,7 +82,7 @@ class UserTable {
         return new Promise((resolve, reject) => {
             schoolPool.query(
                 `select u.account_id,t.id,t.trainingdatestart,t.trainingdatestop,t.title,t.description,p.title as pooltitle from training t
-                inner join user_usertrainingplan_training_usertrainingresults u on t.id = u.training_id
+                inner join user_accounttrainingplan_training_usertrainingresults u on t.id = u.training_id
                 inner join pool p on t.pool_id = p.id
                 where EXTRACT(YEAR FROM t.trainingdatestart) = $1 
                 and EXTRACT(month FROM t.trainingdatestart) = $2

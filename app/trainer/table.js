@@ -122,22 +122,16 @@ class TrainerTables {
         });
     }
 
-    static storeUserTrainingPlan({ databasename, id, swimmingstyle_id, title, description, repetitions, breakseconds, length, createdbyaccont_id, deleted }) {
+    static storeAccountTrainingPlan({ databasename, title, description, createdbyaccont_id, deleted }) {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
             schoolPool.query(
-                `INSERT INTO usertrainingplan(  "id",
-                                                "swimmingstyle_id", 
-                                                "title", 
-                                                "description", 
-                                                "repetitions", 
-                                                "breakseconds",
-                                                "length",
-                                                "fulfilled", 
-                                                "createdbyaccont_id", 
-                                                "deleted") 
-                VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
-                [id, swimmingstyle_id, title, description, repetitions, breakseconds, length, false, createdbyaccont_id, deleted],
+                `INSERT INTO account_trainingplan(      "title", 
+                                                        "description", 
+                                                        "createdbyaccont_id", 
+                                                        "deleted") 
+                VALUES($1,$2,$3,$4)`,
+                [title, description, createdbyaccont_id, deleted],
                 (error, response) => {
                     if (error) return reject(error);
 
@@ -147,12 +141,32 @@ class TrainerTables {
         });
     }
 
-    static getUserTrainingPlans({ databasename, id }) {
+    static storeTrainingPlanEntry({ databasename, id, swimmingstyle_id, repetitions, breakseconds, length, order }) {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
             schoolPool.query(
-                'SELECT * from usertrainingplan WHERE deleted = false AND id = $1',
-                [id],
+                `INSERT INTO trainingplanentry(         "id",
+                                                        "swimmingstyle_id", 
+                                                        "repetitions", 
+                                                        "breakseconds", 
+                                                        "length", 
+                                                        "order") 
+                VALUES($1,$2,$3,$4,$5,$6)`,
+                [id, swimmingstyle_id, repetitions, breakseconds, length, order],
+                (error, response) => {
+                    if (error) return reject(error);
+
+                    resolve({ message: 'Pomyślnie dodano wpis do planu!'});
+                }
+            );
+        });
+    }
+
+    static getAllTrainingPlans({ databasename }) {
+        const schoolPool = connectTo(databasename);
+        return new Promise((resolve, reject) => {
+            schoolPool.query(
+                'SELECT * from account_trainingplan WHERE deleted = false',
                 (error, response) => {
                     if (error) return reject(error);
 

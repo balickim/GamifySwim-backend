@@ -128,42 +128,30 @@ CREATE TABLE "usertrainingresults" (
                         "totaltimemiliseconds" bigint
                     );
 
-CREATE TABLE "user_usertrainingplan_training_usertrainingresults" (
-                        "account_id" int not null,
-                        "usertrainingplan_id" int,
+CREATE TABLE "user_accounttrainingplan_training_usertrainingresults" (
+                        "account_id" int,
+                        "account_trainingplan_id" int,
                         "training_id" int,
                         "usertrainingresults_id" int
                     );
 
-CREATE TABLE "usertrainingplan" (
-                        "id" int,
-                        "swimmingstyle_id" int,
+CREATE TABLE "account_trainingplan" (
+                        "id" SERIAL PRIMARY KEY,
                         "title" varchar(50),
                         "description" text,
-                        "repetitions" int2,
-                        "breakseconds" int2,
-                        "length" int2,
-                        "fulfilled" boolean,
                         "createddate" timestamptz not null default CURRENT_TIMESTAMP,
                         "createdbyaccont_id" int,
                         "deleted" boolean
                     );
 
-                    INSERT INTO public.usertrainingplan
-                    (id, swimmingstyle_id, title, description, repetitions, breakseconds, length, fulfilled, createddate, createdbyaccont_id, deleted)
-                    VALUES(0, 1, 'Domyślny', 'Domyślny plan treningowy', 10, 50, 50, false, CURRENT_TIMESTAMP, 1, false);
-
-                    INSERT INTO public.usertrainingplan
-                    (id, swimmingstyle_id, title, description, repetitions, breakseconds, length, fulfilled, createddate, createdbyaccont_id, deleted)
-                    VALUES(0, 2, 'Domyślny', 'Domyślny plan treningowy', 5, 50, 50, false, CURRENT_TIMESTAMP, 1, false);
-
-                    INSERT INTO public.usertrainingplan
-                    (id, swimmingstyle_id, title, description, repetitions, breakseconds, length, fulfilled, createddate, createdbyaccont_id, deleted)
-                    VALUES(0, 3, 'Domyślny', 'Domyślny plan treningowy', 5, 50, 50, false, CURRENT_TIMESTAMP, 1, false);
-
-                    INSERT INTO public.usertrainingplan
-                    (id, swimmingstyle_id, title, description, repetitions, breakseconds, length, fulfilled, createddate, createdbyaccont_id, deleted)
-                    VALUES(0, 4, 'Domyślny', 'Domyślny plan treningowy', 15, 150, 50, false, CURRENT_TIMESTAMP, 1, false);
+CREATE TABLE "trainingplanentry" (
+                        "id" int,
+                        "swimmingstyle_id" int,
+                        "repetitions" int2,
+                        "breakseconds" int2,
+                        "length" int2,
+                        "order" int2
+                    );
 
 CREATE TABLE "swimmingstyle" (
                         "id" SERIAL PRIMARY KEY,
@@ -195,7 +183,7 @@ CREATE TABLE "pool" (
 
 
 CREATE UNIQUE INDEX ON "usertrainingresults" ("id");
--- CREATE UNIQUE INDEX ON "usertrainingplan" ("id");
+
 ALTER TABLE "account" ADD FOREIGN KEY ("role_id") REFERENCES "role" ("id");
 ALTER TABLE "experienceentry" ADD FOREIGN KEY ("account_id") REFERENCES "account" ("id");
 ALTER TABLE "condition" ADD FOREIGN KEY ("achievement_id") REFERENCES "achievement" ("id");
@@ -204,19 +192,15 @@ ALTER TABLE "user_achievement" ADD FOREIGN KEY ("account_id") REFERENCES "accoun
 ALTER TABLE "account" ADD FOREIGN KEY ("levelofadvancement_id") REFERENCES "levelofadvancement" ("id");
 ALTER TABLE "account" ADD FOREIGN KEY ("gender_id") REFERENCES "gender" ("id");
 ALTER TABLE "training" ADD FOREIGN KEY ("pool_id") REFERENCES "pool" ("id");
-ALTER TABLE "user_usertrainingplan_training_usertrainingresults" ADD FOREIGN KEY ("training_id") REFERENCES "training" ("id");
-ALTER TABLE "user_usertrainingplan_training_usertrainingresults" ADD FOREIGN KEY ("account_id") REFERENCES "account" ("id");
-ALTER TABLE "usertrainingplan" ADD FOREIGN KEY ("swimmingstyle_id") REFERENCES "swimmingstyle" ("id");
--- ALTER TABLE "user_usertrainingplan_training_usertrainingresults" ADD FOREIGN KEY ("usertrainingplan_id") REFERENCES "usertrainingplan" ("id");
-ALTER TABLE "user_usertrainingplan_training_usertrainingresults" ADD FOREIGN KEY ("usertrainingresults_id") REFERENCES "usertrainingresults" ("id");
+ALTER TABLE "user_accounttrainingplan_training_usertrainingresults" ADD FOREIGN KEY ("training_id") REFERENCES "training" ("id");
+ALTER TABLE "user_accounttrainingplan_training_usertrainingresults" ADD FOREIGN KEY ("account_id") REFERENCES "account" ("id");
+ALTER TABLE "trainingplanentry" ADD FOREIGN KEY ("swimmingstyle_id") REFERENCES "swimmingstyle" ("id");
+ALTER TABLE "user_accounttrainingplan_training_usertrainingresults" ADD FOREIGN KEY ("account_trainingplan_id") REFERENCES "account_trainingplan" ("id");
+ALTER TABLE "trainingplanentry" ADD FOREIGN KEY ("id") REFERENCES "account_trainingplan" ("id");
+-- ALTER TABLE "user_accounttrainingplan_training_usertrainingresults" ADD FOREIGN KEY ("usertrainingresults_id") REFERENCES "usertrainingresults" ("id");
 ALTER TABLE "usertrainingresults" ADD FOREIGN KEY ("swimmingstyle_id") REFERENCES "swimmingstyle" ("id");
 ALTER TABLE "training" ADD FOREIGN KEY ("coach_user_id") REFERENCES "account" ("id");
 ALTER TABLE "sessionhistory" ADD FOREIGN KEY ("account_id") REFERENCES "account" ("id");
--- ALTER TABLE "training" ADD FOREIGN KEY ("createdbyaccont_id") REFERENCES "account" ("id");
--- ALTER TABLE "pool" ADD FOREIGN KEY ("createdbyaccont_id") REFERENCES "account" ("id");
--- ALTER TABLE "usertrainingplan" ADD FOREIGN KEY ("createdbyaccont_id") REFERENCES "account" ("id");
--- ALTER TABLE "experienceentry" ADD FOREIGN KEY ("createdbyaccont_id") REFERENCES "account" ("id");
--- ALTER TABLE "account" ADD FOREIGN KEY ("createdbyaccont_id") REFERENCES "account" ("id");
 
 CREATE VIEW vexperience AS 
     SELECT account_id,
@@ -238,4 +222,4 @@ CREATE VIEW vtraining AS
 	from training t
 	left join pool p on t.pool_id = p.id
 	join account a on t.coach_user_id = a.id 
-	join account a2 on t.createdbyaccont_id = a2.id
+	join account a2 on t.createdbyaccont_id = a2.id;

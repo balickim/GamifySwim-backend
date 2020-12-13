@@ -281,14 +281,62 @@ router.get('/swimmingstyle', (req, res, next) => {
 
 /**
 * @swagger
-* /trainer/usertrainingplan:
+* /trainer/accounttrainingplan:
 *   post:
 *     tags:
 *     - trainer
 *     summary: Add new user training plan
 *     security:
 *     - CookieAuth: []
-*     operationId: addusertrainingplan
+*     operationId: addaccounttrainingplan
+*     consumes:
+*     - application/json
+*     parameters:
+*     - name: user
+*       in: body
+*       schema:
+*         type: object
+*         properties:
+*           title:
+*             type: string
+*           description:
+*             type: string
+*           deleted:
+*             type: boolean
+*     responses:
+*       200:
+*         description: Ok
+*/
+
+router.post('/accounttrainingplan', (req, res, next) => {
+    const { title, description, deleted } = req.body;
+
+    const sessionString = req.cookies.sessionString;
+    const { database } = Session.parse(sessionString);
+
+    authenticatedAccount({ sessionString: sessionString })
+        .then(({ account }) => {
+            TrainersTable.storeAccountTrainingPlan({ 
+                    databasename: database,
+                    title,
+                    description,
+                    createdbyaccont_id: account.id,
+                    deleted })
+                .then(({ message }) => res.json({ message }))
+                .catch(error => next(error));
+        })
+});
+
+/**
+* @swagger
+* /trainer/trainingplanentry:
+*   post:
+*     tags:
+*     - trainer
+*     summary: Add new user training plan
+*     security:
+*     - CookieAuth: []
+*     operationId: addtrainingplanentry
 *     consumes:
 *     - application/json
 *     parameters:
@@ -301,42 +349,35 @@ router.get('/swimmingstyle', (req, res, next) => {
 *             type: integer
 *           swimmingstyle_id:
 *             type: integer
-*           title:
-*             type: string
-*           description:
-*             type: string
 *           repetitions:
 *             type: integer
 *           breakseconds:
 *             type: integer
 *           length:
 *             type: integer
-*           deleted:
-*             type: boolean
+*           order:
+*             type: integer
 *     responses:
 *       200:
 *         description: Ok
 */
 
-router.post('/usertrainingplan', (req, res, next) => {
-    const { id, swimmingstyle_id, title, description, repetitions, breakseconds, length, deleted } = req.body;
+router.post('/trainingplanentry', (req, res, next) => {
+    const { id, swimmingstyle_id, repetitions, breakseconds, length, order } = req.body;
 
     const sessionString = req.cookies.sessionString;
     const { database } = Session.parse(sessionString);
 
     authenticatedAccount({ sessionString: sessionString })
         .then(({ account }) => {
-            TrainersTable.storeUserTrainingPlan({ 
+            TrainersTable.storeTrainingPlanEntry({ 
                     databasename: database,
-                    id, 
-                    swimmingstyle_id, 
-                    title,
-                    description,
+                    id,
+                    swimmingstyle_id,
                     repetitions,
                     breakseconds,
                     length,
-                    createdbyaccont_id: account.id,
-                    deleted })
+                    order })
                 .then(({ message }) => res.json({ message }))
                 .catch(error => next(error));
         })
@@ -344,37 +385,27 @@ router.post('/usertrainingplan', (req, res, next) => {
 
 /**
 * @swagger
-* /trainer/usertrainingplans:
-*   post:
+* /trainer/alltrainingplans:
+*   get:
 *     tags:
 *     - trainer
-*     summary: get user training plans
+*     summary: get all training plans
 *     security:
 *     - CookieAuth: []
-*     operationId: getusertrainingplans
-*     parameters:
-*     - name: user
-*       in: body
-*       schema:
-*         type: object
-*         properties:
-*           id:
-*             type: integer
+*     operationId: getalltrainingplans
 *     responses:
 *       200:
 *         description: Ok
 */
 
-router.post('/usertrainingplans', (req, res, next) => {
-    const { id } = req.body;
-
+router.get('/alltrainingplans', (req, res, next) => {
     const sessionString = req.cookies.sessionString;
     const { database } = Session.parse(sessionString);
 
     authenticatedAccount({ sessionString: sessionString })
         .then(() => {
-            TrainersTable.getUserTrainingPlans({databasename: database, id})
-                .then((usertrainingplans) => res.json({ usertrainingplans }))
+            TrainersTable.getAllTrainingPlans({databasename: database})
+                .then((alltrainingplans) => res.json({ alltrainingplans }))
                 .catch(error => next(error));
         })
 });
