@@ -175,6 +175,25 @@ class TrainerTables {
             );
         });
     }
+
+    static assignContestantWithTrainingPlanToTraining({ databasename, account_id, account_trainingplan_id, training_id }) {
+        const schoolPool = connectTo(databasename);
+        return new Promise((resolve, reject) => {
+            schoolPool.query(
+                `INSERT INTO user_accounttrainingplan_training_usertrainingresults(         
+                    "account_id",
+                    "account_trainingplan_id", 
+                    "training_id") 
+                VALUES($1,$2,$3)`,
+                [account_id, account_trainingplan_id, training_id],
+                (error, response) => {
+                    if (error) return reject(error);
+
+                    resolve({ message: 'Pomyślnie dodano zawodnika(-ów) do treningu!'});
+                }
+            );
+        });
+    }
 }
 
 module.exports = TrainerTables;

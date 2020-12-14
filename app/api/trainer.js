@@ -410,4 +410,53 @@ router.get('/alltrainingplans', (req, res, next) => {
         })
 });
 
+/**
+* @swagger
+* /trainer/assigncontestantwithtraining:
+*   post:
+*     tags:
+*     - trainer
+*     summary: assigns contestant with training
+*     security:
+*     - CookieAuth: []
+*     operationId: assigncontestantwithtraining
+*     consumes:
+*     - application/json
+*     parameters:
+*     - name: user
+*       in: body
+*       schema:
+*         type: object
+*         properties:
+*           account_id:
+*             type: integer
+*           account_trainingplan_id:
+*             type: integer
+*           training_id:
+*             type: integer
+*     responses:
+*       200:
+*         description: Ok
+*/
+
+router.post('/assigncontestantwithtraining', (req, res, next) => {
+    const { account_id, account_trainingplan_id, training_id } = req.body;
+    console.log(account_id);
+    console.log(account_trainingplan_id);
+    console.log(training_id);
+    const sessionString = req.cookies.sessionString;
+    const { database } = Session.parse(sessionString);
+
+    authenticatedAccount({ sessionString: sessionString })
+        .then(({ account }) => {
+            TrainersTable.assignContestantWithTrainingPlanToTraining({ 
+                    databasename: database,
+                    account_id,
+                    account_trainingplan_id,
+                    training_id })
+                .then(({ message }) => res.json({ message }))
+                .catch(error => next(error));
+        })
+});
+
 module.exports = router;

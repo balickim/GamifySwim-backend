@@ -218,7 +218,7 @@ CREATE VIEW vaccount AS
     left join gender g on a.gender_id = g.id;
 
 CREATE VIEW vtraining AS
-	select p.title as pooltitle, CONCAT (a.name, ' ', a.surname) as trainerfullname, t.trainingdatestart, t.trainingdatestop, t.title, t.description, t.held, CONCAT (a2.name, ' ', a2.surname) as createdby, t.createddate, t.deleted 
+	select t.id, p.title as pooltitle, CONCAT (a.name, ' ', a.surname) as trainerfullname, t.trainingdatestart, t.trainingdatestop, t.title, t.description, t.held, CONCAT (a2.name, ' ', a2.surname) as createdby, t.createddate, t.deleted 
 	from training t
 	left join pool p on t.pool_id = p.id
 	join account a on t.coach_user_id = a.id 
