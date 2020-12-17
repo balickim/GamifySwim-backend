@@ -194,6 +194,56 @@ class TrainerTables {
             );
         });
     }
+
+    static deleteAssignedContestantsToTraining({ databasename, training_id }) {
+        const schoolPool = connectTo(databasename);
+        return new Promise((resolve, reject) => {
+            schoolPool.query(
+                'delete from user_accounttrainingplan_training_usertrainingresults where training_id = $1',
+                [training_id],
+                (error, response) => {
+                    if (error) return reject(error);
+
+                    resolve({ message: 'Pomyślnie usunięto przypisanych zawodników' });
+                }
+            );
+        });
+    }
+
+    static getContestantsWithTrainingPlans({ databasename, training_id }) {
+        const schoolPool = connectTo(databasename);
+        return new Promise((resolve, reject) => {
+            schoolPool.query(
+                `select a.id, a."name", a.surname, l.title as levelofadvancement, (case when uatu.training_id = $1 then true else false end) as assigned, uatu.account_trainingplan_id from account a
+                    join user_accounttrainingplan_training_usertrainingresults uatu on a.id = uatu.account_id
+                    left join levelofadvancement l on a.levelofadvancement_id = l.id 
+                    where a.role_id = 2
+                    and a.deleted is false
+                    and uatu.training_id = $1
+                    GROUP BY a.id, l.id, uatu.training_id, uatu.account_trainingplan_id
+                union
+                select a.id, a."name", a.surname, l.title as levelofadvancement, null as assigned, null as account_trainingplan_id from account a
+                    left join levelofadvancement l on a.levelofadvancement_id = l.id 
+                    where a.role_id = 2
+                    and a.deleted is false
+                    and a.id not in (
+                    select a.id from account a
+                        join user_accounttrainingplan_training_usertrainingresults uatu on a.id = uatu.account_id
+                        where a.role_id = 2
+                        and a.deleted is false
+                        and uatu.training_id = $1
+                        GROUP BY a.id, uatu.training_id, uatu.account_trainingplan_id
+                    )
+                    GROUP BY a.id, l.id`,
+                [training_id],
+                (error, response) => {
+                    if (error) return reject(error);
+
+                    resolve(response.rows);
+                }
+            );
+        });
+    }
 }
 
 module.exports = TrainerTables;

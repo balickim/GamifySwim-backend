@@ -412,11 +412,54 @@ router.get('/alltrainingplans', (req, res, next) => {
 
 /**
 * @swagger
-* /trainer/assigncontestantwithtraining:
+* /trainer/deletecontestantsfromtraining:
+*   delete:
+*     tags:
+*     - trainer
+*     summary: deletes all contestant assigments to training
+*     security:
+*     - CookieAuth: []
+*     operationId: deletecontestantsfromtraining
+*     consumes:
+*     - application/json
+*     parameters:
+*     - name: user
+*       in: body
+*       schema:
+*         type: object
+*         properties:
+*           training_id:
+*             type: integer
+*     responses:
+*       200:
+*         description: Ok
+*/
+
+router.delete('/deletecontestantsfromtraining', (req, res, next) => {
+    const { training_id } = req.body;
+
+    const sessionString = req.cookies.sessionString;
+    const { database } = Session.parse(sessionString);
+
+    authenticatedAccount({ sessionString: sessionString })
+        .then(() => {
+            TrainersTable.deleteAssignedContestantsToTraining({
+                databasename: database,
+                training_id })
+                .then(({ message }) => res.json({ message }))
+                .catch(error => next(error));
+        })
+});
+
+module.exports = router;
+
+/**
+* @swagger
+* /trainer/assigncontestanttotraining:
 *   post:
 *     tags:
 *     - trainer
-*     summary: assigns contestant with training
+*     summary: assign contestant to training
 *     security:
 *     - CookieAuth: []
 *     operationId: assigncontestantwithtraining
@@ -439,11 +482,9 @@ router.get('/alltrainingplans', (req, res, next) => {
 *         description: Ok
 */
 
-router.post('/assigncontestantwithtraining', (req, res, next) => {
+router.post('/assigncontestanttotraining', (req, res, next) => {
     const { account_id, account_trainingplan_id, training_id } = req.body;
-    console.log(account_id);
-    console.log(account_trainingplan_id);
-    console.log(training_id);
+
     const sessionString = req.cookies.sessionString;
     const { database } = Session.parse(sessionString);
 
@@ -455,6 +496,47 @@ router.post('/assigncontestantwithtraining', (req, res, next) => {
                     account_trainingplan_id,
                     training_id })
                 .then(({ message }) => res.json({ message }))
+                .catch(error => next(error));
+        })
+});
+
+/**
+* @swagger
+* /trainer/getcontestantswithtrainingplans:
+*   post:
+*     tags:
+*     - trainer
+*     summary: get all available contestants that can be assigned to training and existing contestant assigments with their training plans
+*     security:
+*     - CookieAuth: []
+*     operationId: getcontestantswithtrainingplans
+*     consumes:
+*     - application/json
+*     parameters:
+*     - name: user
+*       in: body
+*       schema:
+*         type: object
+*         properties:
+*           training_id:
+*             type: integer
+*     responses:
+*       200:
+*         description: Ok
+*/
+
+router.post('/getcontestantswithtrainingplans', (req, res, next) => {
+    const { training_id } = req.body;
+
+    const sessionString = req.cookies.sessionString;
+    const { database } = Session.parse(sessionString);
+
+    authenticatedAccount({ sessionString: sessionString })
+        .then(() => {
+            TrainersTable.getContestantsWithTrainingPlans({
+                databasename: database,
+                training_id })
+                .then((contestants) => res.json({ contestants }))
                 .catch(error => next(error));
         })
 });
