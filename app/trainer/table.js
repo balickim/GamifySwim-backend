@@ -244,6 +244,24 @@ class TrainerTables {
             );
         });
     }
+
+    static getTrainingPlanEntries({ databasename, id }) {
+        const schoolPool = connectTo(databasename);
+        return new Promise((resolve, reject) => {
+            schoolPool.query(
+                `SELECT s.title as swimmingstyletitle, repetitions, breakseconds, length from trainingplanentry t
+                left join swimmingstyle s on t.swimmingstyle_id = s.id
+                WHERE t.id = $1
+                order by t.order asc`,
+                [id],
+                (error, response) => {
+                    if (error) return reject(error);
+
+                    resolve(response.rows);
+                }
+            );
+        });
+    }
 }
 
 module.exports = TrainerTables;

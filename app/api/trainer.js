@@ -451,8 +451,6 @@ router.delete('/deletecontestantsfromtraining', (req, res, next) => {
         })
 });
 
-module.exports = router;
-
 /**
 * @swagger
 * /trainer/assigncontestanttotraining:
@@ -537,6 +535,47 @@ router.post('/getcontestantswithtrainingplans', (req, res, next) => {
                 databasename: database,
                 training_id })
                 .then((contestants) => res.json({ contestants }))
+                .catch(error => next(error));
+        })
+});
+
+/**
+* @swagger
+* /trainer/gettrainingplanentries:
+*   post:
+*     tags:
+*     - trainer
+*     summary: get training plan entries
+*     security:
+*     - CookieAuth: []
+*     operationId: gettrainingplanentries
+*     consumes:
+*     - application/json
+*     parameters:
+*     - name: user
+*       in: body
+*       schema:
+*         type: object
+*         properties:
+*           id:
+*             type: integer
+*     responses:
+*       200:
+*         description: Ok
+*/
+
+router.post('/gettrainingplanentries', (req, res, next) => {
+    const { id } = req.body;
+
+    const sessionString = req.cookies.sessionString;
+    const { database } = Session.parse(sessionString);
+
+    authenticatedAccount({ sessionString: sessionString })
+        .then(() => {
+            TrainersTable.getTrainingPlanEntries({
+                databasename: database,
+                id })
+                .then((planentries) => res.json({ planentries }))
                 .catch(error => next(error));
         })
 });
