@@ -555,6 +555,47 @@ router.post('/assigncontestanttotraining', (req, res, next) => {
 
 /**
 * @swagger
+* /trainer/getassignedcontestants:
+*   post:
+*     tags:
+*     - trainer
+*     summary: get assigned contestants to specific training
+*     security:
+*     - CookieAuth: []
+*     operationId: getassignedcontestants
+*     consumes:
+*     - application/json
+*     parameters:
+*     - name: user
+*       in: body
+*       schema:
+*         type: object
+*         properties:
+*           training_id:
+*             type: integer
+*     responses:
+*       200:
+*         description: Ok
+*/
+
+router.post('/getassignedcontestants', (req, res, next) => {
+    const { training_id } = req.body;
+
+    const sessionString = req.cookies.sessionString;
+    const { database } = Session.parse(sessionString);
+
+    authenticatedAccount({ sessionString: sessionString })
+        .then(() => {
+            TrainersTable.getAssignedContestants({
+                databasename: database,
+                training_id })
+                .then((contestants) => res.json({ contestants }))
+                .catch(error => next(error));
+        })
+});
+
+/**
+* @swagger
 * /trainer/getcontestantswithtrainingplans:
 *   post:
 *     tags:

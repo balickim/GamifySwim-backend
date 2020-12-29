@@ -240,6 +240,25 @@ class TrainerTables {
         });
     }
 
+    static getAssignedContestants({ databasename, training_id }) {
+        const schoolPool = connectTo(databasename);
+        return new Promise((resolve, reject) => {
+            schoolPool.query(
+                `select a.* from vaccount a
+                    left join user_accounttrainingplan_training_usertrainingresults uatu on a.id = uatu.account_id
+                    where role = 'zawodnik'
+                    and deleted = false
+                    and uatu.training_id = $1`,
+                [training_id],
+                (error, response) => {
+                    if (error) return reject(error);
+
+                    resolve(response.rows);
+                }
+            );
+        });
+    }
+
     static getContestantsWithTrainingPlans({ databasename, training_id }) {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
