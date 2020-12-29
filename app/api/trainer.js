@@ -96,6 +96,61 @@ router.get('/trainings', (req, res, next) => {
 
 /**
 * @swagger
+* /trainer/currenttrainings:
+*   get:
+*     tags:
+*     - trainer
+*     summary: get currenttrainings
+*     security:
+*     - CookieAuth: []
+*     operationId: getcurrenttrainings
+*     responses:
+*       200:
+*         description: Ok
+*/
+
+router.get('/currenttrainings', (req, res, next) => {
+    const sessionString = req.cookies.sessionString;
+    const { database } = Session.parse(sessionString);
+
+    authenticatedAccount({ sessionString: sessionString })
+        .then(({ account }) => {
+            TrainersTable.getCurrentTrainingsOfTrainer({databasename: database, trainerid: account.id})
+                .then((currenttrainings) => res.json({ currenttrainings }))
+                .catch(error => next(error));
+        })
+});
+
+
+/**
+* @swagger
+* /trainer/finishedtrainings:
+*   get:
+*     tags:
+*     - trainer
+*     summary: get finishedtrainings
+*     security:
+*     - CookieAuth: []
+*     operationId: getfinishedtrainings
+*     responses:
+*       200:
+*         description: Ok
+*/
+
+router.get('/finishedtrainings', (req, res, next) => {
+    const sessionString = req.cookies.sessionString;
+    const { database } = Session.parse(sessionString);
+
+    authenticatedAccount({ sessionString: sessionString })
+        .then(({ account }) => {
+            TrainersTable.getFinishedTrainingsOfTrainer({databasename: database, trainerid: account.id})
+                .then((finishedtrainings) => res.json({ finishedtrainings }))
+                .catch(error => next(error));
+        })
+});
+
+/**
+* @swagger
 * /trainer/trainers:
 *   get:
 *     tags:

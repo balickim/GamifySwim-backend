@@ -28,7 +28,37 @@ class TrainerTables {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
             schoolPool.query(
-                'SELECT * from vtraining WHERE deleted = false ',
+                'SELECT * from vtraining WHERE deleted = false',
+                (error, response) => {
+                    if (error) return reject(error);
+
+                    resolve(response.rows);
+                }
+            );
+        });
+    }
+
+    static getCurrentTrainingsOfTrainer({ databasename, trainerid }) {
+        const schoolPool = connectTo(databasename);
+        return new Promise((resolve, reject) => {
+            schoolPool.query(
+                'SELECT * from vtraining WHERE deleted = false and trainingdatestop > now() and trainingdatestart < now() and trainerid = $1',
+                [trainerid],
+                (error, response) => {
+                    if (error) return reject(error);
+
+                    resolve(response.rows);
+                }
+            );
+        });
+    }
+
+    static getFinishedTrainingsOfTrainer({ databasename, trainerid }) {
+        const schoolPool = connectTo(databasename);
+        return new Promise((resolve, reject) => {
+            schoolPool.query(
+                'SELECT * from vtraining WHERE deleted = false and trainingdatestop < now() and trainerid = $1',
+                [trainerid],
                 (error, response) => {
                     if (error) return reject(error);
 
