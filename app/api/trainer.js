@@ -635,4 +635,54 @@ router.post('/gettrainingplanentries', (req, res, next) => {
         })
 });
 
+/**
+* @swagger
+* /trainer/markcontestantpresent:
+*   put:
+*     tags:
+*     - trainer
+*     summary: mark contestant present on training and declare if trainingplan was fulfilled 
+*     security:
+*     - CookieAuth: []
+*     operationId: markcontestantpresent
+*     consumes:
+*     - application/json
+*     parameters:
+*     - name: user
+*       in: body
+*       schema:
+*         type: object
+*         properties:
+*           account_id:
+*             type: integer
+*           training_id:
+*             type: integer
+*           present:
+*             type: boolean
+*           fulfilled:
+*             type: boolean
+*     responses:
+*       200:
+*         description: Ok
+*/
+
+router.put('/markcontestantpresent', (req, res, next) => {
+    const { account_id, training_id, present, fulfilled } = req.body;
+
+    const sessionString = req.cookies.sessionString;
+    const { database } = Session.parse(sessionString);
+
+    authenticatedAccount({ sessionString: sessionString })
+        .then(({ account }) => {
+            TrainersTable.markContestantPresentWithTrainingPlanFulfilled({ 
+                    databasename: database,
+                    account_id,
+                    training_id,
+                    present,
+                    fulfilled })
+                .then(({ message }) => res.json({ message }))
+                .catch(error => next(error));
+        })
+});
+
 module.exports = router;

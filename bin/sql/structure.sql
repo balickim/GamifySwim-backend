@@ -130,7 +130,9 @@ CREATE TABLE "usertrainingresults" (
 
 CREATE TABLE "user_accounttrainingplan_training_usertrainingresults" (
                         "account_id" int,
+                        "present" boolean,
                         "account_trainingplan_id" int,
+                        "fulfilled" boolean,
                         "training_id" int,
                         "usertrainingresults_id" int
                     );

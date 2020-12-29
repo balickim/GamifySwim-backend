@@ -6,9 +6,9 @@ const options = {
             description: 'API documentation for GamifySwim',
             swagger: '2.0',
             title: 'GamifySwim',
-            version: '0.2.0',
+            version: '0.6.5',
             contact: {
-                "email": "michal.balicki@onet.pl"
+                "email": "mbalicki@forgitec.eu"
             },
         },
         securityDefinitions: {

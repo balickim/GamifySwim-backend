@@ -292,6 +292,25 @@ class TrainerTables {
             );
         });
     }
+
+    static markContestantPresentWithTrainingPlanFulfilled({ databasename, account_id, training_id, present, fulfilled }) {
+        const schoolPool = connectTo(databasename);
+        return new Promise((resolve, reject) => {
+            schoolPool.query(
+                `update user_accounttrainingplan_training_usertrainingresults
+                    set "present" = $1, 
+                    "fulfilled" = $2
+                        where account_id = $3
+                        and training_id = $4`,
+                [present, fulfilled, account_id, training_id],
+                (error, response) => {
+                    if (error) return reject(error);
+
+                    resolve({ message: 'Pomyślnie zaznaczono obecność!'});
+                }
+            );
+        });
+    }
 }
 
 module.exports = TrainerTables;
