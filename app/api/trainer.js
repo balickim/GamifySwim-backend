@@ -678,14 +678,14 @@ router.post('/gettrainingplanentries', (req, res, next) => {
 
 /**
 * @swagger
-* /trainer/markcontestantpresent:
+* /trainer/contestantpresentandplanfulfilled:
 *   put:
 *     tags:
 *     - trainer
 *     summary: mark contestant present on training and declare if trainingplan was fulfilled 
 *     security:
 *     - CookieAuth: []
-*     operationId: markcontestantpresent
+*     operationId: contestantpresentandplanfulfilled
 *     consumes:
 *     - application/json
 *     parameters:
@@ -707,7 +707,7 @@ router.post('/gettrainingplanentries', (req, res, next) => {
 *         description: Ok
 */
 
-router.put('/markcontestantpresent', (req, res, next) => {
+router.put('/contestantpresentandplanfulfilled', (req, res, next) => {
     const { account_id, training_id, present, fulfilled } = req.body;
 
     const sessionString = req.cookies.sessionString;
@@ -715,12 +715,53 @@ router.put('/markcontestantpresent', (req, res, next) => {
 
     authenticatedAccount({ sessionString: sessionString })
         .then(({ account }) => {
-            TrainersTable.markContestantPresentWithTrainingPlanFulfilled({ 
+            TrainersTable.markContestantPresentAndFulfilled({ 
                     databasename: database,
                     account_id,
                     training_id,
                     present,
                     fulfilled })
+                .then(({ message }) => res.json({ message }))
+                .catch(error => next(error));
+        })
+});
+
+/**
+* @swagger
+* /trainer/contestantpresentandplanfulfilled:
+*   delete:
+*     tags:
+*     - trainer
+*     summary: delete all contestant present and with fulfilled plans from training 
+*     security:
+*     - CookieAuth: []
+*     operationId: deletecontestantpresentandplanfulfilled
+*     consumes:
+*     - application/json
+*     parameters:
+*     - name: user
+*       in: body
+*       schema:
+*         type: object
+*         properties:
+*           training_id:
+*             type: integer
+*     responses:
+*       200:
+*         description: Ok
+*/
+
+router.delete('/contestantpresentandplanfulfilled', (req, res, next) => {
+    const { training_id } = req.body;
+
+    const sessionString = req.cookies.sessionString;
+    const { database } = Session.parse(sessionString);
+
+    authenticatedAccount({ sessionString: sessionString })
+        .then(({ account }) => {
+            TrainersTable.deleteMarkedContestantPresentAndFulfilled({ 
+                    databasename: database,
+                    training_id })
                 .then(({ message }) => res.json({ message }))
                 .catch(error => next(error));
         })

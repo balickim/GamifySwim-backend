@@ -244,7 +244,7 @@ class TrainerTables {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
             schoolPool.query(
-                `select a.* from vaccount a
+                `select a.*, uatu.present, uatu.fulfilled from vaccount a
                     left join user_accounttrainingplan_training_usertrainingresults uatu on a.id = uatu.account_id
                     where role = 'zawodnik'
                     and deleted = false
@@ -312,7 +312,7 @@ class TrainerTables {
         });
     }
 
-    static markContestantPresentWithTrainingPlanFulfilled({ databasename, account_id, training_id, present, fulfilled }) {
+    static markContestantPresentAndFulfilled({ databasename, account_id, training_id, present, fulfilled }) {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
             schoolPool.query(
@@ -326,6 +326,24 @@ class TrainerTables {
                     if (error) return reject(error);
 
                     resolve({ message: 'Pomyślnie zaznaczono obecność!'});
+                }
+            );
+        });
+    }
+
+    static deleteMarkedContestantPresentAndFulfilled({ databasename, training_id }) {
+        const schoolPool = connectTo(databasename);
+        return new Promise((resolve, reject) => {
+            schoolPool.query(
+                `update user_accounttrainingplan_training_usertrainingresults
+                    set "present" = false, 
+                    "fulfilled" = false
+                        where training_id = $1`,
+                [training_id],
+                (error, response) => {
+                    if (error) return reject(error);
+
+                    resolve({ message: 'Pomyślnie usunięto obecność!'});
                 }
             );
         });
