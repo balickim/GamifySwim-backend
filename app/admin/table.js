@@ -1,7 +1,18 @@
 const { connectTo } = require('../../secrets/databaseConfiguration');
 
 class AdminTable {
-    static storeAccount({ databasename, roleId, usernameHash, passwordHash, name, secondname, surname, birthdate, gender, createdByAccountId, deleted }) {
+    static storeAccount({
+        databasename,
+        roleId,
+        usernameHash,
+        passwordHash,
+        name,
+        secondname,
+        surname,
+        birthdate,
+        gender,
+        createdByAccountId,
+        deleted }) {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
             schoolPool.query(
@@ -20,7 +31,7 @@ class AdminTable {
                 (error, response) => {
                     if (error) return reject(error);
 
-                    resolve({ message: 'Pomyślnie dodano konto!'});
+                    resolve({ message: 'Pomyślnie dodano konto!' });
                 }
             );
         });

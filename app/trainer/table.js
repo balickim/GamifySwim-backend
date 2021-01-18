@@ -1,7 +1,14 @@
 const { connectTo } = require('../../secrets/databaseConfiguration');
 
 class TrainerTables {
-    static storeTraining({ databasename, pool_id, coach_user_id, trainingdatestart, trainingdatestop, title, description, createdbyaccont_id, deleted }) {
+    static storeTraining({ databasename,
+        pool_id,
+        coach_user_id,
+        trainingdatestart,
+        trainingdatestop,
+        title, description,
+        createdbyaccont_id,
+        deleted }) {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
             schoolPool.query(
@@ -14,11 +21,12 @@ class TrainerTables {
                                         "createdbyaccont_id", 
                                         "deleted") 
                 VALUES($1,$2,$3,$4,$5,$6,$7,$8)`,
-                [pool_id, coach_user_id, trainingdatestart, trainingdatestop, title, description, createdbyaccont_id, deleted],
+                [pool_id, coach_user_id, trainingdatestart,
+                    trainingdatestop, title, description, createdbyaccont_id, deleted],
                 (error, response) => {
                     if (error) return reject(error);
 
-                    resolve({ message: 'Pomyślnie utworzono trening!'});
+                    resolve({ message: 'Pomyślnie utworzono trening!' });
                 }
             );
         });
@@ -100,7 +108,7 @@ class TrainerTables {
                 (error, response) => {
                     if (error) return reject(error);
 
-                    resolve({ message: 'Pomyślnie dodano basen!'});
+                    resolve({ message: 'Pomyślnie dodano basen!' });
                 }
             );
         });
@@ -132,7 +140,7 @@ class TrainerTables {
                 (error, response) => {
                     if (error) return reject(error);
 
-                    resolve({ message: 'Pomyślnie dodano styl!'});
+                    resolve({ message: 'Pomyślnie dodano styl!' });
                 }
             );
         });
@@ -165,7 +173,7 @@ class TrainerTables {
                 (error, response) => {
                     if (error) return reject(error);
 
-                    resolve({ message: 'Pomyślnie dodano plan treningowy!'});
+                    resolve({ message: 'Pomyślnie dodano plan treningowy!' });
                 }
             );
         });
@@ -186,7 +194,7 @@ class TrainerTables {
                 (error, response) => {
                     if (error) return reject(error);
 
-                    resolve({ message: 'Pomyślnie dodano wpis do planu!'});
+                    resolve({ message: 'Pomyślnie dodano wpis do planu!' });
                 }
             );
         });
@@ -219,7 +227,7 @@ class TrainerTables {
                 (error, response) => {
                     if (error) return reject(error);
 
-                    resolve({ message: 'Pomyślnie dodano zawodnika(-ów) do treningu!'});
+                    resolve({ message: 'Pomyślnie dodano zawodnika(-ów) do treningu!' });
                 }
             );
         });
@@ -263,7 +271,10 @@ class TrainerTables {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
             schoolPool.query(
-                `select a.id, a."name", a.surname, l.title as levelofadvancement, (case when uatu.training_id = $1 then true else false end) as assigned, uatu.account_trainingplan_id from account a
+                `select a.id, a."name", a.surname, l.title as levelofadvancement, 
+                (case when uatu.training_id = $1 then true else false end) as assigned, 
+                uatu.account_trainingplan_id 
+                from account a
                     join user_accounttrainingplan_training_usertrainingresults uatu on a.id = uatu.account_id
                     left join levelofadvancement l on a.levelofadvancement_id = l.id 
                     where a.role_id = 2
@@ -271,7 +282,8 @@ class TrainerTables {
                     and uatu.training_id = $1
                     GROUP BY a.id, l.id, uatu.training_id, uatu.account_trainingplan_id
                 union
-                select a.id, a."name", a.surname, l.title as levelofadvancement, null as assigned, null as account_trainingplan_id from account a
+                select a.id, a."name", a.surname, l.title as levelofadvancement, 
+                null as assigned, null as account_trainingplan_id from account a
                     left join levelofadvancement l on a.levelofadvancement_id = l.id 
                     where a.role_id = 2
                     and a.deleted is false
@@ -312,7 +324,12 @@ class TrainerTables {
         });
     }
 
-    static markContestantPresentAndFulfilled({ databasename, account_id, training_id, present, fulfilled }) {
+    static markContestantPresentAndFulfilled({
+        databasename,
+        account_id,
+        training_id,
+        present,
+        fulfilled }) {
         const schoolPool = connectTo(databasename);
         return new Promise((resolve, reject) => {
             schoolPool.query(
@@ -325,7 +342,7 @@ class TrainerTables {
                 (error, response) => {
                     if (error) return reject(error);
 
-                    resolve({ message: 'Pomyślnie zaznaczono obecność!'});
+                    resolve({ message: 'Pomyślnie zaznaczono obecność!' });
                 }
             );
         });
@@ -343,7 +360,7 @@ class TrainerTables {
                 (error, response) => {
                     if (error) return reject(error);
 
-                    resolve({ message: 'Pomyślnie usunięto obecność!'});
+                    resolve({ message: 'Pomyślnie usunięto obecność!' });
                 }
             );
         });
