@@ -16,7 +16,7 @@ const router = new Router();
 *     summary: add new experienceentry entry
 *     security:
 *     - CookieAuth: []
-*     operationId: contestantlist
+*     operationId: experienceentry
 *     consumes:
 *     - application/json
 *     parameters:
@@ -45,6 +45,37 @@ router.post('/experienceentry', (req, res, next) => {
             ExperienceTable.storeExperienceEntry({databasename: database, account_id: req.body.account_id, title: req.body.title, amount: req.body.amount})
                 .then(() => {
                     res.json({message: 'experienceentry entry added'});
+            })
+        })
+        .catch(error => next(error));
+});
+
+/**
+* @swagger
+* /experience/info:
+*   get:
+*     tags:
+*     - experience
+*     summary: add new experienceentry entry
+*     security:
+*     - CookieAuth: []
+*     operationId: experienceinfo
+*     consumes:
+*     - application/json
+*     responses:
+*       200:
+*         description: Ok
+*/
+
+router.get('/info', (req, res, next) => {
+    const sessionString = req.cookies.sessionString;
+    const { database } = Session.parse(sessionString);
+
+    authenticatedAccount({ sessionString: sessionString })
+        .then(({ account }) => {
+            ExperienceTable.getExperienceOfAccount({databasename: database, account_id: account.id})
+                .then(exp => {
+                    res.json({ exp });
             })
         })
         .catch(error => next(error));

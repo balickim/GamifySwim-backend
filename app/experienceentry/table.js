@@ -15,6 +15,21 @@ class ExperienceTable {
             );
         });
     }
+
+    static getExperienceOfAccount({ databasename, account_id }) {
+        const schoolPool = connectTo(databasename);
+        return new Promise((resolve, reject) => {
+            schoolPool.query(
+                'select totalamount, level, floor(barpercent * 10) as barpercent from vexperience where account_id = $1',
+                [account_id],
+                (error, response) => {
+                    if (error) return reject(error);
+
+                    resolve(response.rows);
+                }
+            );
+        });
+    }
 }
 
 module.exports = ExperienceTable;
