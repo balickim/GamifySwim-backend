@@ -210,4 +210,144 @@ router.post('/training/info', (req, res, next) => {
         .catch(error => next(error));
 });
 
+/**
+* @swagger
+* /user/badge/count:
+*   get:
+*     tags:
+*     - user
+*     summary: Get amount of badges present in database
+*     security:
+*     - CookieAuth: []
+*     operationId: badgecount
+*     consumes:
+*     - application/json
+*     responses:
+*       200:
+*         description: Ok
+*/
+
+router.get('/badge/count', (req, res, next) => {
+    const sessionString = req.cookies.sessionString;
+    const { database } = Session.parse(sessionString);
+
+    authenticatedAccount({ sessionString: sessionString })
+        .then(() => {
+            UserTable.badgeCount({databasename: database})
+                .then(data => {
+                    res.json({ data });
+            })
+        })
+        .catch(error => next(error));
+});
+
+/**
+* @swagger
+* /user/badge/info:
+*   post:
+*     tags:
+*     - user
+*     summary: Get badge info
+*     security:
+*     - CookieAuth: []
+*     operationId: badgeinfo
+*     consumes:
+*     - application/json
+*     parameters:
+*     - name: user
+*       in: body
+*       schema:
+*         type: object
+*         properties:
+*           badge_id:
+*             type: integer
+*     responses:
+*       200:
+*         description: Ok
+*/
+
+router.post('/badge/info', (req, res, next) => {
+    const sessionString = req.cookies.sessionString;
+    const { database } = Session.parse(sessionString);
+
+    authenticatedAccount({ sessionString: sessionString })
+        .then(({ account }) => {
+            UserTable.badgeInfo({databasename: database, badge_id: req.body.badge_id, account_id: account.id })
+                .then(badge => {
+                    res.json({ badge });
+            })
+        })
+        .catch(error => next(error));
+});
+
+/**
+* @swagger
+* /user/badge/result:
+*   post:
+*     tags:
+*     - user
+*     summary: Get badge progress info by id 
+*     security:
+*     - CookieAuth: []
+*     operationId: badgeresult
+*     consumes:
+*     - application/json
+*     parameters:
+*     - name: user
+*       in: body
+*       schema:
+*         type: object
+*         properties:
+*           badge_id:
+*             type: integer
+*     responses:
+*       200:
+*         description: Ok
+*/
+
+router.post('/badge/result', (req, res, next) => {
+    const sessionString = req.cookies.sessionString;
+    const { database } = Session.parse(sessionString);
+
+    authenticatedAccount({ sessionString: sessionString })
+        .then(({ account }) => {
+            UserTable.badgeResult({databasename: database, param_badge_id: req.body.badge_id, param_account_id: account.id })
+                .then(badge => {
+                    res.json({ badge });
+            })
+        })
+        .catch(error => next(error));
+});
+
+/**
+* @swagger
+* /user/chartbestcontestant:
+*   get:
+*     tags:
+*     - user
+*     summary: Get chart data
+*     security:
+*     - CookieAuth: []
+*     operationId: chartbestcontestant
+*     consumes:
+*     - application/json
+*     responses:
+*       200:
+*         description: Ok
+*/
+
+router.get('/chartbestcontestant', (req, res, next) => {
+    const sessionString = req.cookies.sessionString;
+    const { database } = Session.parse(sessionString);
+
+    authenticatedAccount({ sessionString: sessionString })
+        .then(() => {
+            UserTable.chartBestContestant({databasename: database})
+                .then(data => {
+                    res.json({ data });
+            })
+        })
+        .catch(error => next(error));
+});
+
 module.exports = router;
