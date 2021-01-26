@@ -25,8 +25,6 @@ const router = new Router();
 *       schema:
 *         type: object
 *         properties:
-*           account_id:
-*             type: integer
 *           title:
 *             type: string
 *           amount:
@@ -39,10 +37,10 @@ const router = new Router();
 router.post('/experienceentry', (req, res, next) => {
     const sessionString = req.cookies.sessionString;
     const { database } = Session.parse(sessionString);
-
+    console.log('%cexperienceentry.js line:40 req.body', 'color: #007acc;', req.body);
     authenticatedAccount({ sessionString: sessionString })
-        .then(() => {
-            ExperienceTable.storeExperienceEntry({databasename: database, account_id: req.body.account_id, title: req.body.title, amount: req.body.amount})
+        .then(({ account }) => {
+            ExperienceTable.storeExperienceEntry({databasename: database, account_id: account.id, title: req.body.title, amount: req.body.amount})
                 .then(() => {
                     res.json({message: 'experienceentry entry added'});
             })

@@ -363,6 +363,25 @@ class UserTable {
             );
         });
     }
+
+    static markBadgeAsClaimed({ databasename, achievement_id, account_id }) {
+        const schoolPool = connectTo(databasename);
+        return new Promise((resolve, reject) => {
+            schoolPool.query(
+                `INSERT INTO user_achievement(         
+                    "achievement_id",
+                    "account_id",
+                    "claimed") 
+                VALUES($1,$2,$3)`,
+                [achievement_id, account_id, true],
+                (error, response) => {
+                    if (error) return reject(error);
+
+                    resolve({ message: 'Pomyślnie zaznaczono odznakę!' });
+                }
+            );
+        });
+    }
 }
 
 module.exports = UserTable;

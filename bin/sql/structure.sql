@@ -41,7 +41,7 @@ CREATE TABLE "role" (
 CREATE TABLE "experienceentry" (
                         "id" SERIAL PRIMARY KEY,
                         "account_id" int not null,
-                        "title" varchar(50),
+                        "title" varchar(250),
                         "amount" int,
                         "createddate" timestamptz not null default CURRENT_TIMESTAMP,
                         "createdbyaccont_id" int
@@ -88,7 +88,7 @@ CREATE TABLE "user_achievement" (
                         "achievement_id" int,
                         "account_id" int not null,
                         "claimed" boolean,
-                        "claimeddate" timestamptz
+                        "claimeddate" timestamptz not null default CURRENT_TIMESTAMP
                     );
 
 CREATE TABLE "achievement" (

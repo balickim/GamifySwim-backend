@@ -321,6 +321,45 @@ router.post('/badge/result', (req, res, next) => {
 
 /**
 * @swagger
+* /user/badge/claim:
+*   post:
+*     tags:
+*     - user
+*     summary: Get badge progress info by id 
+*     security:
+*     - CookieAuth: []
+*     operationId: badgeclaim
+*     consumes:
+*     - application/json
+*     parameters:
+*     - name: user
+*       in: body
+*       schema:
+*         type: object
+*         properties:
+*           achievement_id:
+*             type: integer
+*     responses:
+*       200:
+*         description: Ok
+*/
+
+router.post('/badge/claim', (req, res, next) => {
+    const sessionString = req.cookies.sessionString;
+    const { database } = Session.parse(sessionString);
+    console.log('%cuser.js line:350 req.body', 'color: #007acc;', req.body);
+    authenticatedAccount({ sessionString: sessionString })
+        .then(({ account }) => {
+            UserTable.markBadgeAsClaimed({databasename: database, achievement_id: req.body.achievement_id, account_id: account.id })
+                .then(({message}) => {
+                    res.json({ message });
+            })
+        })
+        .catch(error => next(error));
+});
+
+/**
+* @swagger
 * /user/chartbestcontestant:
 *   get:
 *     tags:
