@@ -166,7 +166,7 @@ class UserTable {
         case 0:
             return new Promise((resolve, reject) => {
                 schoolPool.query(
-                    `select sum(t.length) as result,
+                    `select case when sum(t.repetitions * t.length) is null then CAST(0 AS integer) else sum(t.repetitions * t.length) end as result,
                         'total swam distance of account' as description
                         from trainingplanentry t
                         left join user_accounttrainingplan_training_usertrainingresults uatu on t.id = uatu.account_trainingplan_id
@@ -264,7 +264,7 @@ class UserTable {
             return new Promise((resolve, reject) => {
                 schoolPool.query(
                     `with t as (
-                        select uatu.account_id,uatu.training_id, sum(t.repetitions * t.length) as result
+                        select uatu.account_id,uatu.training_id, case when sum(t.repetitions * t.length) is null then CAST(0 AS integer) else sum(t.repetitions * t.length) end as result
                         from user_accounttrainingplan_training_usertrainingresults uatu
                         left join trainingplanentry t on uatu.account_trainingplan_id = t.id
                         group by uatu.training_id,uatu.account_id 
@@ -299,7 +299,7 @@ class UserTable {
         case 7:
             return new Promise((resolve, reject) => {
                 schoolPool.query(
-                    `select case when sum(t.length) is null then CAST(0 AS integer) else sum(t.length) end as result,
+                    `select case when sum(t.repetitions * t.length) is null then CAST(0 AS integer) else sum(t.repetitions * t.length) end as result,
                     'swam distance of account this week' as description
                     from trainingplanentry t
                     left join user_accounttrainingplan_training_usertrainingresults uatu on t.id = uatu.account_trainingplan_id
@@ -319,7 +319,7 @@ class UserTable {
         case 8:
             return new Promise((resolve, reject) => {
                 schoolPool.query(
-                    `select case when sum(t.length) is null then CAST(0 AS integer) else sum(t.length) end as result,
+                    `select case when sum(t.repetitions * t.length) is null then CAST(0 AS integer) else sum(t.repetitions * t.length) end as result,
                     'swam distance of account this month' as description
                     from trainingplanentry t
                     left join user_accounttrainingplan_training_usertrainingresults uatu on t.id = uatu.account_trainingplan_id

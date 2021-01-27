@@ -181,47 +181,47 @@ CREATE TABLE "pool" (
                     (title, description, width, length, "depth", createddate, createdbyaccont_id, deleted)
                     VALUES('domyślny', 'Domyślny basen', 25, 50, 5, CURRENT_TIMESTAMP, 1, false);
 
-INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(0, 100, 'Początkujący wymoczek', 'Przepłyń łącznie 5000m', 5000, '');
+INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(0, 100, 'Początkujący wymoczek 🤓', 'Przepłyń łącznie 5000m', 5000, '');
 INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(0, 1000, 'Uczeń', 'Przepłyń łącznie 30 000m', 30000, '');
-INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(0, 5000, 'Mistz', 'Przepłyń łącznie 100 000m', 100000, '');
+INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(0, 5000, 'Mistrz', 'Przepłyń łącznie 100 000m', 100000, '');
 INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(0, 20000, 'Wielki mistrz', 'Przepłyń łącznie 200 000m', 200000, '');
-INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(0, 50000, 'Jak to w ogóle możliwe??', 'Przepłyń łącznie 500 000m', 500000, '');
+INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(0, 50000, 'Jak to w ogóle możliwe?? 🙉', 'Przepłyń łącznie 500 000m', 500000, '');
 
 INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(1, 100, 'Będzie lepiej', 'Weź udział w swoim pierwszym treningu', 1, '');
 INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(1, 500, 'Widzisz? Mamy postęp', 'Weź udział w pięciu treningach', 5, '');
-INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(1, 2000, 'No popatrz.. dałeś radę', 'Weź udział w dwudziestu treningach', 20, '');
+INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(1, 2000, 'No popatrz.. dałeś radę 😎', 'Weź udział w dwudziestu treningach', 20, '');
 INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(1, 10000, 'Tyle to już chyba przesada!', 'Weź udział w stu treningach', 100, '');
 
 INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(2, 100, 'Party starter', 'Wykonaj swój pierwszy plan treningowy', 1, '');
 INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(2, 500, 'Całkiem nieźle', 'Wykonaj pięc planów treningowych', 5, '');
 INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(2, 2000, 'Czujesz poprawę formy?', 'Wykonaj dwadzieścia planów treningowych', 20, '');
-INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(2, 10000, 'Forma nie do zdarcia', 'Wykonaj sto planów treningowych', 100, '');
+INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(2, 10000, 'Forma nie do zdarcia 🤘', 'Wykonaj sto planów treningowych', 100, '');
 
 INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(3, 10, 'Normalka', 'Użyj jednego stylu pływania w treningu', 1, '');
-INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(3, 200, 'Trochę lepiej..', 'Wykorzystaj dwa style w treningu', 2, '');
+INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(3, 200, 'Trochę lepiej.. 🤛', 'Wykorzystaj dwa style w treningu', 2, '');
 INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(3, 3000, 'No już nieźle', 'Wykorzystaj trzy style w treningu', 3, '');
 INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(3, 10000, 'Człowiek orkiestra', 'Wykorzystaj pięć stylów w treningu', 5, '');
 
-INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(4, 500, 'Dobry początek', 'Loguj się do aplikacji 2 dni pod rząd', 2, '');
+INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(4, 500, 'Dobry początek 🚤', 'Loguj się do aplikacji 2 dni pod rząd', 2, '');
 INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(4, 2000, 'Bardzo dobrze', 'Loguj się do aplikacji 5 dni pod rząd', 5, '');
 INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(4, 10000, 'Niezwykłe', 'Loguj się do aplikacji 15 dni pod rząd', 15, '');
-INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(4, 30000, 'Pilny uczeń', 'Loguj się do aplikacji 30 dni pod rząd', 30, '');
+INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(4, 30000, 'Pilny uczeń 🤽', 'Loguj się do aplikacji 30 dni pod rząd', 30, '');
 
 INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(5, 500, 'Wymoczek', 'Przepłyń przynajmniej 100m na treningu', 100, '');
 INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(5, 1500, 'Uczeń', 'Przepłyń przynajmniej 500m na treningu', 500, '');
-INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(5, 4000, 'Kozak', 'Przepłyń przynajmniej 1000m na treningu', 1000, '');
+INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(5, 4000, 'Kozak 😎', 'Przepłyń przynajmniej 1000m na treningu', 1000, '');
 INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(5, 10000, 'Mistrz', 'Przepłyń przynajmniej 2000m na treningu', 2000, '');
 INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(5, 30000, 'Posejdon', 'Przepłyń przynajmniej 3000m na treningu', 3000, '');
 
-INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(7, 500, 'Tygodniowy Pelias', 'Przepłyń przynajmniej 1000m w tygodniu', 1000, '');
-INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(7, 2500, 'Tygodniowy Orion', 'Przepłyń przynajmniej 3000m w tygodniu', 3000, '');
-INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(7, 5000, 'Tygodniowy Rode', 'Przepłyń przynajmniej 6000m w tygodniu', 6000, '');
-INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(7, 15000, 'Tygodniowy Tryton', 'Przepłyń przynajmniej 10 000m w tygodniu', 10000, '');
+INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(7, 500, 'Tygodniowy Pelias', 'Przepłyń przynajmniej 1000m w tym tygodniu', 1000, '');
+INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(7, 2500, 'Tygodniowy Orion', 'Przepłyń przynajmniej 3000m w tym tygodniu', 3000, '');
+INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(7, 5000, 'Tygodniowy Rode', 'Przepłyń przynajmniej 6000m w tym tygodniu', 6000, '');
+INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(7, 15000, 'Tygodniowy Tryton 🦈', 'Przepłyń przynajmniej 10 000m w tym tygodniu', 10000, '');
 
-INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(8, 500, 'Miesięczny Pelias', 'Przepłyń przynajmniej 5000m w miesiącu', 5000, '');
-INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(8, 2500, 'Miesięczny Orion', 'Przepłyń przynajmniej 15 000m w miesiącu', 15000, '');
-INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(8, 5000, 'Miesięczny Rode', 'Przepłyń przynajmniej 30 000m w miesiącu', 30000, '');
-INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(8, 15000, 'Miesięczny Tryton', 'Przepłyń przynajmniej 50 000m w miesiącu', 50000, '');
+INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(8, 500, 'Miesięczny Pelias', 'Przepłyń przynajmniej 5000m w tym miesiącu', 5000, '');
+INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(8, 2500, 'Miesięczny Orion', 'Przepłyń przynajmniej 15 000m w tym miesiącu', 15000, '');
+INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(8, 5000, 'Miesięczny Rode', 'Przepłyń przynajmniej 30 000m w tym miesiącu', 30000, '');
+INSERT INTO public.achievement (badgeid, exppoints, title, description, "condition", imagepath) VALUES(8, 15000, 'Miesięczny Tryton 🦀', 'Przepłyń przynajmniej 50 000m w tym miesiącu', 50000, '');
 
 CREATE UNIQUE INDEX ON "usertrainingresults" ("id");
 
